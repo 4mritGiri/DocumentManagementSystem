@@ -21,8 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('dmsApp.urls')),
-]
+    path("", include("dmsApp.urls")),
+]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 # Add static and media file serving during development
 if settings.DEBUG:

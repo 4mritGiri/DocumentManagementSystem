@@ -1,5 +1,16 @@
-# from django.urls import path, include
+from django.urls import path
+from . import views
+from django.contrib.auth import views as auth_views
+from django.views.generic.base import RedirectView
 
-# urlpatterns = [
-#     path('', include("dmsApp.urls"))
-# ]
+urlpatterns = [
+    path('', views.home, name="home-page"),
+    path('redirect-admin', RedirectView.as_view(url="/admin"),name="redirect-admin"),
+    path('login',auth_views.LoginView.as_view(template_name="login.html",redirect_authenticated_user = True),name='login'),
+    path('userlogin', views.login_user, name="login-user"),
+    path('user-register', views.registerUser, name="register-user"),
+    path('logout',views.logoutuser,name='logout'),
+    path('profile', views.profile, name="profile"),
+
+    path('my_posts', views.posts_mgt, name="posts-page"),
+] 

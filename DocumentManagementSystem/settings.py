@@ -53,7 +53,8 @@ JAZZMIN_SETTINGS = {
     "site_brand": "DMS",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    # "site_logo": "app/images/logo.png",
+    # "site_logo": "default/logo.png",
+    "site_logo": "images/default/logo.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
     "login_logo": None,
@@ -113,8 +114,8 @@ JAZZMIN_SETTINGS = {
     # Additional links to include in the user menu on the top right ("app" url type is not allowed)
     "usermenu_links": [
         # {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
-        {"model": "auth.user"},
-        {"model": "app.Customer"}
+        {"model": "dmsApp.Post"},
+        {"model": "dmsApp.Document"},
     ],
 
     #############
@@ -291,7 +292,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kathmandu'
 
 USE_I18N = True
 
@@ -301,9 +302,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [ 
+    BASE_DIR / "static",
+    ]
+
+#MEDIA
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / "media/"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login'
+
+ID_ENCRYPTION_KEY = b'UdhnfelTxqj3q6BbPe7H86sfQnboSBzb0irm2atoFUw='
+
