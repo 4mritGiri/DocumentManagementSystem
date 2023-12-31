@@ -139,11 +139,11 @@ JAZZMIN_SETTINGS = {
 
     # Custom links to append to app groups, keyed on app name
     "custom_links": {
-        "app": [{
+        "dmsApp": [{
             "name": "Make Messages", 
             "url": "make_messages", 
             "icon": "fas fa-comments",
-            "permissions": ["app.ProductView"]
+            "permissions": ["dmsApp.ProductView"]
         }]
     },
     "icons": {
@@ -151,12 +151,12 @@ JAZZMIN_SETTINGS = {
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
         
-        "app.Verification": "fas fa-address-card",
-        "app.cart": "fas fa-shopping-cart",
-        "app.OrderPlaced": "fas fa-shipping-fast",
-        "app.brand": "fab fa-font-awesome-flag",
-        "app.Customer": "fas fa-user-check",
-        "app.product": "fab fa-product-hunt",
+        "dmsApp.Verification": "fas fa-address-card",
+        "dmsApp.cart": "fas fa-shopping-cart",
+        "dmsApp.OrderPlaced": "fas fa-shipping-fast",
+        "dmsApp.brand": "fab fa-font-awesome-flag",
+        "dmsApp.Customer": "fas fa-user-check",
+        "dmsApp.product": "fab fa-product-hunt",
         
     },
     "default_icon_parents": "fas fa-chevron-circle-right",

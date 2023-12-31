@@ -48,6 +48,7 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
             
+
 # Create your models here.
 class DocumentType(models.Model):
     name = models.CharField(max_length=100)
@@ -67,7 +68,18 @@ class Document(models.Model):
     name = models.CharField(max_length=100)
     document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # Add more fields here 
+    file_path = models.FileField(upload_to='uploads/',blank=True, null=True)
+    date_created = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+    
+    def get_share_url(self):
+        fernet = Fernet(settings.ID_ENCRYPTION_KEY)
+        value = fernet.encrypt(str(self.pk).encode())
+        value = base64.urlsafe_b64encode(value).decode()
+        return reverse("share-file-id", kwargs={"id": (value)})
 
 class Package(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -75,8 +87,8 @@ class Package(models.Model):
     package_id = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     remarks = models.TextField(blank=True, null=True)
-    # Add more fields here
-
+    date_created = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField(auto_now=True)
 
 
 class PackageVerification(models.Model):
