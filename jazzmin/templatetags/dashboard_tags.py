@@ -34,12 +34,26 @@ def get_total_room_rack_compartment():
     return RoomRackCompartment.objects.count()
 
 @register.simple_tag
-def get_total_package_by_status(status):
-    return Package.objects.filter(status=status).count()
+def get_total_items_by_status(model, status):
+    """
+    Get the total count of items in a model filtered by status.
+
+    Args:
+        model (django.db.models.Model): The Django model to query.
+        status (str): The status by which to filter items.
+
+    Returns:
+        int: The total count of items.
+    """
+    try:
+        return model.objects.filter(status=status).count()
+    except:
+        return 0
 
 @register.simple_tag
-def get_room_rack(status):
-    return RoomRackCompartment.objects.values(status).distinct().count()
+def get_total_room_rack_compartment_by_type(type):
+    return RoomRackCompartment.objects.values(type).distinct().count()
+
 
 
 
@@ -68,19 +82,24 @@ def render_custom_cards():
             "category": 'Room Rack Compartment', 'icon': 'fas fa-warehouse fa-3x', 'link': 'Package/roomrackcompartment/', 'badge_color': "dark", 'title': 'Total Room Rack Compartment', 'value': get_total_room_rack_compartment
         },
         {
-            "category": 'Pending Package', 'icon': 'fas fa-box-open fa-3x', 'link': 'Package/package/', 'badge_color': "danger", 'title': 'Total Pending Package', 'value': get_total_package_by_status('Pending')
+            "category": 'Pending Package', 'icon': 'fas fa-box-open fa-3x', 'link': 'Package/package/', 'badge_color': "danger", 'title': 'Total Pending Package', 'value': get_total_items_by_status(Package,'Pending')
         },
         {
-            "category": 'Approved Package', 'icon': 'fas fa-box-open fa-3x', 'link': 'Package/package/', 'badge_color': "success", 'title': 'Total Approved Package', 'value': get_total_package_by_status('Approved')
+            "category": 'Approved Package', 'icon': 'fas fa-box-open fa-3x', 'link': 'Package/package/', 'badge_color': "success", 'title': 'Total Approved Package', 'value': get_total_items_by_status(Package,'Approved')
         },
         {
-            "category": 'Rejected Package', 'icon': 'fas fa-box-open fa-3x', 'link': 'Package/package/', 'badge_color': "warning", 'title': 'Total Rejected Package', 'value': get_total_package_by_status('Rejected')
+            "category": 'Rejected Package', 'icon': 'fas fa-box-open fa-3x', 'link': 'Package/package/', 'badge_color': "warning", 'title': 'Total Rejected Package', 'value': get_total_items_by_status(Package, 'Rejected')
         },
         {
-            "category": 'Total Room', 'icon': 'fas fa-warehouse fa-3x', 'link': 'Package/roomrackcompartment/', 'badge_color': "dark", 'title': 'Total Room', 'value': get_room_rack('room')
+            "category": 'Total Room', 'icon': 'fas fa-warehouse fa-3x', 'link': 'Package/roomrackcompartment/', 'badge_color': "dark", 'title': 'Total Room', 'value': get_total_room_rack_compartment_by_type('room')
         },
         {
-            "category": 'Total Rack', 'icon': 'fas fa-warehouse fa-3x', 'link': 'Package/roomrackcompartment/', 'badge_color': "dark", 'title': 'Total Rack', 'value': get_room_rack('rack')
+            "category": 'Total Rack', 'icon': 'fas fa-warehouse fa-3x', 'link': 'Package/roomrackcompartment/', 'badge_color': "dark", 'title': 'Total Rack', 'value': get_total_room_rack_compartment_by_type('rack')
+        },
+        {
+            "category": 'Total Compartment', 'icon': 'fas fa-warehouse fa-3x', 'link': 'Package/roomrackcompartment/', 'badge_color': "dark", 'title': 'Total Compartment', 'value': get_total_room_rack_compartment_by_type('compartment')
         },
     ]
     return {'cards': cards}
+
+

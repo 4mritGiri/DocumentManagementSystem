@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*/__pycache__/
+**/__pycache__/
+*/__pycache__/*.pyc
+*/__pycache__/*
+*.py[cod]
+*$py.class
+
+# Caches
+*.sqlite3
+*.pyc
+
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Visual Studio Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Django local settings
+local_settings.py
+
+# Mac OS
+.DS_Store
+
+# Temporary files
+*.swp
+
+# Ignore migrations
+**/migrations/*.py
+**/migrations/*.pyc
