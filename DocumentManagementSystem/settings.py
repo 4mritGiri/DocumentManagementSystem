@@ -32,14 +32,15 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
-    'tinymce',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dmsApp.apps.DmsappConfig',
+    'django.contrib.humanize',
+    'dmsApp.apps.DmsappConfig', # dmsApp is the name of the app
+    'Package.apps.PackageConfig', # Package is the name of the app
 ]
 
 JAZZMIN_SETTINGS = {
@@ -54,19 +55,19 @@ JAZZMIN_SETTINGS = {
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     # "site_logo": "default/logo.png",
-    "site_logo": "images/default/logo.png",
+    "site_logo": "../media/default/logo.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": None,
+    "login_logo": "../media/default/fms-logo.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
-    "login_logo_dark": None,
+    "login_logo_dark": "../media/default/a.png",
 
     # CSS classes that are applied to the logo above
     "site_logo_classes": "img-circle",
 
     # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": None,
+    "site_icon": "../media/default/logo.png",
 
     # Welcome text on the login screen
     "welcome_sign": "Welcome DMS",
@@ -76,10 +77,12 @@ JAZZMIN_SETTINGS = {
 
     # The model admin to search from the search bar, search bar omitted if excluded
     # "search_model": "auth.User",
-    # "search_model": "app.Product",
+    "search_model": "Package.Package",
 
     # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
-    "user_avatar": None,
+    # ImageField
+    'user_avatar': None,
+
 
     ############
     # Top Menu #
@@ -89,22 +92,18 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
 
         # Url that gets reversed (Permissions can be added)
-        # {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        # {"name": "Messages", "url": "admin:make_messages", "permissions": ["auth.view_user"]},
+        {"name": "View Site", "url": "/", "new_window": True},
 
         # external url that opens in a new window (Permissions can be added)
         # {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
 
         # model admin to link to (Permissions checked against model)
-        {"model": "auth.User"},
-        {"model": "app.Product"},
-        {"model": "app.Cart"},
-        {"model": "app.Customer"},
-        # {"model": "app.Brand"},
-        {"model": "app.OrderPlaced"},
-        # {"model": "app.Verification"},
+        {"model": "Package.Package"},
 
         # App with dropdown menu to all its models pages (Permissions checked against models)
-        {"app": "cart"},
+        
     ],
 
     #############
@@ -113,9 +112,7 @@ JAZZMIN_SETTINGS = {
 
     # Additional links to include in the user menu on the top right ("app" url type is not allowed)
     "usermenu_links": [
-        # {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
-        {"model": "dmsApp.Post"},
-        {"model": "dmsApp.Document"},
+        {"name": "Github", "url": "https://github.com/4mritGiri/DocumentManagementSystem" , "new_window": True, "icon": "fab fa-github"},
     ],
 
     #############
@@ -135,28 +132,22 @@ JAZZMIN_SETTINGS = {
     "hide_models": [],
 
     # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
-    "order_with_respect_to": ["auth", "app", "app.cart", "app.orderplaced"],
+    "order_with_respect_to": ["auth","Package"],
 
     # Custom links to append to app groups, keyed on app name
     "custom_links": {
-        "dmsApp": [{
-            "name": "Make Messages", 
-            "url": "make_messages", 
-            "icon": "fas fa-comments",
-            "permissions": ["dmsApp.ProductView"]
-        }]
     },
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
-        
-        "dmsApp.Verification": "fas fa-address-card",
-        "dmsApp.cart": "fas fa-shopping-cart",
-        "dmsApp.OrderPlaced": "fas fa-shipping-fast",
-        "dmsApp.brand": "fab fa-font-awesome-flag",
-        "dmsApp.Customer": "fas fa-user-check",
-        "dmsApp.product": "fab fa-product-hunt",
+        "Package": "fas fa-box-open",
+        "Package.Package": "fas fa-box-open",
+        "Package.Document": "fas fa-file-alt",
+        "Package.Branch": "fas fa-code-branch",
+        "Package.Store": "fas fa-store",
+        "Package.RoomRackCompartment": "fas fa-warehouse",
+        "Package.PackageVerification": "fas fa-address-card",
         
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -197,7 +188,7 @@ JAZZMIN_SETTINGS = {
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
-    "body_small_text": False,
+    "body_small_text": True,
     "brand_small_text": False,
     "brand_colour": "navbar-primary",
     "accent": "accent-primary",
@@ -319,7 +310,9 @@ MEDIA_ROOT = BASE_DIR / "media/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+
 LOGIN_URL = '/login'
 
 ID_ENCRYPTION_KEY = b'UdhnfelTxqj3q6BbPe7H86sfQnboSBzb0irm2atoFUw='
 
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

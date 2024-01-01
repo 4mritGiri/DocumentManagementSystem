@@ -7,9 +7,9 @@ admin.site.site_title = 'DMS Admin Portal'
 admin.site.index_title = 'Welcome to DMS Admin Portal'
 
 
-admin.site.register(Post)
-admin.site.register(Document)
-admin.site.register(DocumentType)
-admin.site.register(DocumentAccess)
-admin.site.register(DocumentRequest)
+# admin.site.register(Post)
+# admin.site.register(Document)
+# admin.site.register(DocumentType)
+# admin.site.register(DocumentAccess)
+# admin.site.register(DocumentRequest)
 

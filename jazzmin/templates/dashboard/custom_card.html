@@ -1,0 +1,33 @@
+
+{% load dashboard_tags %}
+
+{% for card in cards %}
+<div class="col-md-3 col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="m-0">{{ card.title }}</h6>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <a href="{{ card.link }}" class="btn btn-block">
+                        <i class="{{ card.icon }}"></i>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="{{ card.link }}" class="btn">
+                        {% with count_result=card.value %} 
+                            <span class="badge text-md badge-{{ card.badge_color }} badge-pill">{{ count_result }}</span>
+                        {% endwith %}
+                    </a>                            
+                </div>
+            </div>
+            {% comment %} <ul class="list-group align-items-center">
+                <li class="d-flex justify-content-between align-items-center pt-2">
+                    {{ card.title }}
+                </li>
+            </ul> {% endcomment %}
+        </div>
+    </div>
+</div>
+{% endfor %}
