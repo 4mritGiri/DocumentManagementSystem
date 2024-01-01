@@ -64,8 +64,8 @@ JAZZMIN_SETTINGS = {
     "copyright": "DMS",
 
     # The model admin to search from the search bar, search bar omitted if excluded
-    # "search_model": "auth.User",
-    "search_model": "Package.Package",
+    "search_model": "auth.User",
+    # "search_model": "Package.Package",
 
     # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
     # ImageField
@@ -132,7 +132,7 @@ JAZZMIN_SETTINGS = {
         "Package": "fas fa-box-open",
         "Package.Package": "fas fa-box-open",
         "Package.Document": "fas fa-file-alt",
-        "Package.Branch": "fas fa-code-branch",
+        "Package.Branche": "fas fa-code-branch",
         "Package.Store": "fas fa-store",
         "Package.RoomRackCompartment": "fas fa-warehouse",
         "Package.PackageVerification": "fas fa-address-card",

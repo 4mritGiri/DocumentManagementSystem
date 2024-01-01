@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Document, Store, RoomRackCompartment, Package, Branch, PackageVerification
+from .models import Document, Store, RoomRackCompartment, Package, Branche, PackageVerification
 from django.utils.html import format_html
 from django.urls import reverse
 
@@ -11,7 +11,7 @@ class DocumentAdmin(admin.ModelAdmin):
     search_fields = ('doc_id', 'doc_classification_type', 'doc_type', 'doc_details')
 
 # Branch
-@admin.register(Branch)
+@admin.register(Branche)
 class BranchAdmin(admin.ModelAdmin):
     list_display = ('branch_name', 'uid', 'branch_code')
     list_filter = ('branch_name', 'branch_code')

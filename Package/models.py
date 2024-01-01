@@ -35,7 +35,7 @@ class Store(models.Model):
         return f'{self.store_id} - {self.store_name} - {self.store_location}'
 
 # Branch 
-class Branch(models.Model):
+class Branche(models.Model):
     uid = models.AutoField(primary_key=True)
     branch_code = models.CharField(max_length=60)
     branch_name = models.CharField(max_length=110)
@@ -86,7 +86,7 @@ class Package(models.Model):
     pkg_id = models.AutoField(primary_key=True)
     pkg_name = models.CharField(max_length=100)
     document_type = models.ForeignKey(Document, on_delete=models.CASCADE)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branche, on_delete=models.CASCADE)
     details = models.TextField()
     packaging_size = models.CharField(choices=PACKAGING_SIZE_CHOICES, default='Box size 1', max_length=90)
     status = models.CharField(choices=STATUS_CHOICES, default='Pending', max_length=90)

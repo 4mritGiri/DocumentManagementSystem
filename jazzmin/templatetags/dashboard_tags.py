@@ -1,7 +1,7 @@
 # dashboard_tags.py
 from django import template
 from django.contrib.auth.models import User
-from Package.models import Package, Store, Branch, Document, PackageVerification, RoomRackCompartment
+from Package.models import Package, Store, Branche, Document, PackageVerification, RoomRackCompartment
 
 register = template.Library()
 
@@ -15,7 +15,7 @@ def get_total_store():
 
 @register.simple_tag
 def get_total_branch():
-    return Branch.objects.count()
+    return Branche.objects.count()
 
 @register.simple_tag
 def get_total_package():
