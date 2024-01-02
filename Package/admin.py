@@ -61,11 +61,6 @@ class RackAdmin(admin.ModelAdmin):
     
     def rack_location(self, obj):
         return obj.compartment.compartment_name + ', ' + obj.compartment.compartment_location
-    
-    def get_queryset(self, request):
-        qs = super(RackAdmin, self).get_queryset(request)
-        return qs.select_related('compartment')
-    
 
 # Register your models here.
 @admin.register(Package)
@@ -77,7 +72,7 @@ class PackageAdmin(admin.ModelAdmin):
         return obj.document_type.doc_type
     
     def storeLocation(self, obj):
-        return obj.store_location.room + ', ' + obj.store_location.rack + ', ' + obj.store_location.compartment
+        return obj.store_location.store_room_name + ', ' + obj.store_location.branch.branch_name
         
 
 # Package verification
