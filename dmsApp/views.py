@@ -1,28 +1,25 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from DocumentManagementSystem.settings import MEDIA_ROOT, MEDIA_URL
 import json
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from dmsApp.forms import UserRegistration, UpdateProfile, SavePost, UpdatePasswords
-from DocumentManagementSystem.settings import MEDIA_ROOT, MEDIA_URL
+from dmsApp.forms import UserRegistration, SavePost, UpdateProfile, UpdatePasswords
 from dmsApp.models import Post
 from cryptography.fernet import Fernet
 from django.conf import settings
 import base64
-
-
 # Create your views here.
-
+ 
 context = {
-    'page_title': "Document Management System",
+    'page_title' : 'File Management System',
 }
-
-# login page
+#login
 def login_user(request):
     logout(request)
-    response = {"status": 'failed', "message":'' }
+    resp = {"status":'failed','msg':''}
     username = ''
     password = ''
     if request.POST:
@@ -32,19 +29,30 @@ def login_user(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
-                login(request,user)
-                response['status'] = 'success'
+                login(request, user)
+                resp['status']='success'
             else:
-                response['message'] = 'Incorrect username or password'
-        else: 
-            response['message'] = "Incorrect username or password"
+                resp['msg'] = "Incorrect username or password"
+        else:
+            resp['msg'] = "Incorrect username or password"
+    return HttpResponse(json.dumps(resp),content_type='application/json')
 
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
-# logout page
+#Logout
 def logoutuser(request):
     logout(request)
     return redirect('/')
+
+@login_required
+def home(request):
+    context['page_title'] = 'Home'
+    if request.user.is_superuser:
+        posts = Post.objects.all()
+    else:
+        posts = Post.objects.filter(user = request.user).all()
+    context['posts'] = posts
+    context['postsLen'] = posts.count()
+    print(request.build_absolute_uri())
+    return render(request, 'home.html',context)
 
 def registerUser(request):
     user = request.user
@@ -70,41 +78,6 @@ def registerUser(request):
 def profile(request):
     context['page_title'] = 'Profile'
     return render(request, 'profile.html',context)
-
-@login_required
-def update_profile(request):
-    context['page_title'] = 'Update Profile'
-    user = User.objects.get(id = request.user.id)
-    if not request.method == 'POST':
-        form = UpdateProfile(instance=user)
-        context['form'] = form
-        print(form)
-    else:
-        form = UpdateProfile(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile has been updated")
-            return redirect("profile")
-        else:
-            context['form'] = form
-            
-    return render(request, 'manage_profile.html',context)
-
-
-@login_required
-def home(request):
-    context['page_title'] = "Home"
-    if request.user.is_superuser:
-        posts = Post.objects.all()
-    else:
-        posts = Post.objects.filter(user = request.user).all()
-
-    context['posts'] = posts
-    context['postsLen'] = posts.count()
-    print(request.build_absolute_uri())
-    return render(request, 'home.html', context)
-
-
 
 @login_required
 def posts_mgt(request):
@@ -210,7 +183,5 @@ def update_password(request):
         form = UpdatePasswords(request.POST)
         context['form'] = form
     return render(request,'update_password.html',context)
-
-
 
 

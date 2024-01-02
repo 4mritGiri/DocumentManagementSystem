@@ -48,10 +48,11 @@ local_settings.py
 **/migrations/*.py
 **/migrations/*.pyc
 **/migrations/*
-dmsApp/__pycache__/admin.cpython-311.pyc
-dmsApp/__pycache__/forms.cpython-311.pyc
+dmsApp/__pycache__/*
+dmsApp/__pycache__/*.*
 dmsApp/__pycache__/models.cpython-311.pyc
 dmsApp/__pycache__/views.cpython-311.pyc
-jazzmin/templatetags/__pycache__/dashboard_tags.cpython-311.pyc
-Package/__pycache__/admin.cpython-311.pyc
-Package/__pycache__/models.cpython-311.pyc
+jazzmin/templatetags/__pycache__/
+Package/__pycache__/
+Package/__pycache__/
+
