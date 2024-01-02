@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from .models import Post, DocumentType, UserRoles, Branch, Store
+from .models import Post
 
 class UserRegistration(UserCreationForm):
     email = forms.EmailField(max_length=250, help_text="The email field is required")
