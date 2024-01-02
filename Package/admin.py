@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.contrib import admin
 from .models import Document, StoreRoom, Compartment, Package, Branch, PackageVerification, Rack
-from django.utils.html import format_html, mark_safe
+from django.utils.html import mark_safe
 from .utils import generate_qr
 
 # Register your models here.
@@ -76,7 +76,7 @@ class PackageAdmin(admin.ModelAdmin):
 
     def qr_code(self, obj):
         # Generate QR code and get the path
-        qr_code_path = f"uploads/qr_codes/{obj.pkg_id}_qr_code.png"
+        qr_code_path = f"./media/uploads/qr_codes/{obj.pkg_id}_qr_code.png"
 
         data = f"""
         Package ID: {obj.pkg_id}
@@ -93,8 +93,8 @@ class PackageAdmin(admin.ModelAdmin):
         generate_qr(data, output_path=qr_code_path)
         
         # url = reverse("admin:package_package_qr_code", kwargs={"pkg_id": obj.pkg_id})
-        # return mark_safe(f'<img src="{qr_code_path}" alt="{obj.pkg_name}" width="100" height="100" />')
-        return mark_safe(f'<a href="{qr_code_path}" target="_blank"><img src="{qr_code_path}" alt="{obj.pkg_name}" width="100" height="100" /></a>')
+        # if update page is open, ../../../../../
+        return mark_safe(f'<a href="../../../../../{qr_code_path}" target="_blank"><img src="../../../../../{qr_code_path}" alt="{obj.pkg_name}" width="100" height="100" /></a>')
 
     qr_code.short_description = "QR Code"  # Column header in the admin
     readonly_fields = ['qr_code']

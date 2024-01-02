@@ -122,6 +122,8 @@ class Package(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     
+    def __str__(self):
+        return f'{self.pkg_name}'
 
 # 					* assign dcoument type - c		** API connection with current HR system for auto user creation and update				
 # 					* destruction period - f						
