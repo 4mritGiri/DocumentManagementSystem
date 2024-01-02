@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Document, StoreRoom, Compartment, Package, Branch, PackageVerification
+from .models import Document, StoreRoom, Compartment, Package, Branch, PackageVerification, Rack
 from django.utils.html import format_html
 from django.urls import reverse
 
@@ -46,6 +46,25 @@ class StoreRoomAdmin(admin.ModelAdmin):
         return qs.select_related('rack', 'branch')
     
 
+# Rack
+@admin.register(Rack)
+class RackAdmin(admin.ModelAdmin):
+    list_display = ('rack_name', 'rack_id', 'rack_location')
+    list_filter = ('rack_name', 'rack_id')
+    search_fields = ('rack_id', 'rack_name')
+
+    def rack_name(self, obj):
+        return obj.rack_name
+    
+    def rack_id(self, obj):
+        return obj.rack_id
+    
+    def rack_location(self, obj):
+        return obj.compartment.compartment_name + ', ' + obj.compartment.compartment_location
+    
+    def get_queryset(self, request):
+        qs = super(RackAdmin, self).get_queryset(request)
+        return qs.select_related('compartment')
     
 
 # Register your models here.
