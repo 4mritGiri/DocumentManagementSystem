@@ -546,8 +546,11 @@ input[type="text"]
 .selector select {
     padding: 0 10px;
     margin: 0 0 10px;
+    /* background-color: #3f474e; */
+    color: #3f474e;
+    width: 100%;
     /*border-radius: 0 0 4px 4px;*/
-;
+
 }
 
 .selector-add,
