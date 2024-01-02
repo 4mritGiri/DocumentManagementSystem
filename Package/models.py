@@ -54,7 +54,7 @@ class Rack(models.Model):
     compartment = models.ForeignKey(Compartment, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.rack_id} - {self.rack_name} - {self.rack_location}'
+        return f'{self.rack_id} - {self.rack_name} - {self.compartment}'
     
 
 # Store
@@ -66,6 +66,7 @@ class StoreRoom(models.Model):
 
     def __str__(self):
         return f'{self.store_room_id} - {self.store_room_name} - {self.rack} - {self.branch}'
+    
 
 
 # # room rack compartment
@@ -121,6 +122,8 @@ class Package(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     
+    def __str__(self):
+        return f'{self.pkg_name}'
 
 # 					* assign dcoument type - c		** API connection with current HR system for auto user creation and update				
 # 					* destruction period - f						
@@ -205,7 +208,7 @@ class PackageVerification(models.Model):
     authorizer = models.ForeignKey(User, on_delete=models.CASCADE)
     verification_remarks = models.TextField()
     verification_date = models.DateTimeField(auto_now_add=True)
-    
+
 
     def __str__(self):
         return f'{self.package_id} - {self.authorizer} - {self.verification_remarks} - {self.verification_date}'

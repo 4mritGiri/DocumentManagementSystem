@@ -31,11 +31,15 @@ def login_user(request):
             if user.is_active:
                 login(request, user)
                 resp['status']='success'
+                if user.is_staff:
+                    print("Redirecting to admin page")
+                    return redirect('/profile')
+
             else:
                 resp['msg'] = "Incorrect username or password"
         else:
             resp['msg'] = "Incorrect username or password"
-    return HttpResponse(json.dumps(resp),content_type='application/json')
+    return HttpResponse(json.dumps(resp),content_type="application/json")
 
 #Logout
 def logoutuser(request):
