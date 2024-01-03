@@ -66,13 +66,14 @@ class RackAdmin(admin.ModelAdmin):
 # Register your models here.
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display = ('pkg_id', 'qr_code', 'pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'remarks', 'storeLocation', 'created_at', 'updated_at')
+    list_display = ('pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'qr_code', 'storeLocation', 'created_at', 'updated_at', 'remarks')
 
     def document(self, obj):
         return obj.document_type.doc_type
     
     def storeLocation(self, obj):
         return obj.store_location.store_room_name + ', ' + obj.store_location.branch.branch_name
+    
 
     def qr_code(self, obj):
         # Generate QR code and get the path
@@ -92,11 +93,111 @@ class PackageAdmin(admin.ModelAdmin):
         
         generate_qr(data, output_path=qr_code_path)
         
-        # url = reverse("admin:package_package_qr_code", kwargs={"pkg_id": obj.pkg_id})
-        # if update page is open, ../../../../../
-        return mark_safe(f'<a href="../../../../../{qr_code_path}" target="_blank"><img src="../../../../../{qr_code_path}" alt="{obj.pkg_name}" width="100" height="100" /></a>')
+        
+        return mark_safe(f'''
+            <div style="display:flex; flex-direction: row; align-items: center;">
+                <a href="#" onclick="openPopup('../../../../../{qr_code_path}'); return false;">
+                    <img src="../../../../../{qr_code_path}" alt="{obj.pkg_name}" width="65" height="65" />
+                </a>
+                <div>
+                    <a
+                      download="../../../../../{qr_code_path}"
+                      href="../../../../../{qr_code_path}"
+                      class="btn btn-primary btn-sm justify-content-center ml-1"
+                    >
+                        <i class="fa fa-download"></i>
+                    </a>
+                    <div style="padding-vertival: 3px;border-radius: 2px; cursor: pointer;" class="bg-success ml-1 mt-1" onclick="printPage('../../../../../{qr_code_path}')">Print</div>
+                </div>
+                <script>
+                    // Get the screen width and height
+                    var screenWidth = window.screen.width;
+                    var screenHeight = window.screen.height;
 
-    qr_code.short_description = "QR Code"  # Column header in the admin
+                    // Calculate the center position
+                    var centerX = (screenWidth) / 2; 
+                    var centerY = (screenHeight - screenHeight/2 ) / 2; 
+
+                    function openPopup(imagePath) {{
+                        // Open the window in the center
+                        window.open(imagePath, 'Image Pop-up', `width=400,height=400,left=${{centerX}},top=${{centerY}}`);
+                    }}
+                    function printPage(qrCodePath) {{
+                        var popupWindow = window.open('', 'Image Pop-up',  `width=550,height=500,left=${{centerX}},top=${{centerY-50}}`);
+
+                        // Set the content of the new window
+                        popupWindow.document.write(`
+                            <html>
+                                <head>
+                                    <title>QR Code</title>
+                                </head>
+                                <body style="display:flex; flex-direction: column;">
+                                    <h2 style="text-align: center; color: #0062cc;">Document Management System</h2>
+                                    <div style="display:flex; flex-direction: row; margin:0 auto;">
+                                        <img src="${{qrCodePath}}" alt="QR Code" width="200" height="200" />
+                                        <table style="text-align: left;" class="table table-bordered table-sm">
+                                            <tr >
+                                                <th>Package ID :</th>
+                                                <td>{obj.pkg_id}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Package Name :</th>
+                                                <td>{obj.pkg_name}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Document Type :</th>
+                                                <td>{obj.document_type.doc_type}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Details :</th>
+                                                <td>{obj.details}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Packaging Size :</th>
+                                                <td>{obj.packaging_size}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Status :</th>
+                                                <td>{obj.status}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Destruction Eligible Time :</th>
+                                                <td>{obj.destruction_eligible_time}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Store Location :</th>
+                                                <td>{obj.store_location.store_room_name}, {obj.store_location.branch.branch_name}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Remarks :</th>
+                                                <td>{obj.remarks}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <p style="text-align: center;"><span style="color: #967000;">Note:-</span>Scan this QR code to view the package details.</p>
+                                </body>
+                            </html>
+                        `);
+
+                        popupWindow.document.close();
+
+                        // Wait for the content to be loaded before printing
+                        popupWindow.onload = function () {{
+                            if (popupWindow.document.readyState === "complete") {{
+                                // Print the window content
+                                popupWindow.print();
+                            }} else {{
+                                console.error("Failed to load content for printing.");
+                            }}
+                        }};
+                    }}
+
+
+                </script>
+            </div>
+        ''')
+
+    qr_code.short_description = "QR Code" 
     readonly_fields = ['qr_code']
 
 # Package verification

@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-j^$jpl2!yr(2)l&)(cz(utnunbk+ruou_psi)qc338k0j48(*^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['amritgiri']
 
 
 # Application definition
@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'dmsApp.apps.DmsappConfig', # dmsApp is the name of the app
     'Package.apps.PackageConfig', # Package is the name of the app
+    'PackageCollection.apps.PackagecollectionConfig', # PackageCollection is the name of the app
 ]
 
 JAZZMIN_SETTINGS = {
