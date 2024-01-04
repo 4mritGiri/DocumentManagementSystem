@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.contrib import admin
 from .models import Document, StoreRoom, Compartment, Package, Branch, PackageVerification, Rack
-from django.utils.html import mark_safe
+from django.utils.html import mark_safe # type: ignore
 from .utils import generate_qr
 
 # Register your models here.
@@ -11,6 +11,18 @@ class DocumentAdmin(admin.ModelAdmin):
     list_filter = ('doc_classification_type', 'doc_type')
     search_fields = ('doc_id', 'doc_classification_type', 'doc_type', 'doc_details')
 
+    fieldsets = (
+        ('Document', {
+            'fields': ('doc_type', 'doc_classification_type')
+        }),
+        (
+            'Document Details', {
+                'fields': ('doc_details',),
+                'classes': ('collapse',)
+            }
+        )
+    )
+
 # Branch
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
@@ -18,12 +30,24 @@ class BranchAdmin(admin.ModelAdmin):
     list_filter = ('branch_name', 'branch_code', 'branch_location')
     search_fields = ('branch_id', 'branch_name', 'branch_code', 'branch_location')
 
+    fieldsets = (
+        ('Branch', {
+            'fields': ('branch_name', 'branch_code', 'branch_location')
+        }),
+    )
+
 # Compartment
 @admin.register(Compartment)
 class CompartmentAdmin(admin.ModelAdmin):
     list_display = ('compartment_name', 'compartment_id', 'compartment_location')
     list_filter = ('compartment_name', 'compartment_location')
     search_fields = ('compartment_id', 'compartment_name', 'compartment_location')
+
+    fieldsets = (
+        ('Compartment', {
+            'fields': ('compartment_name', 'compartment_location')
+        }),
+    )
 
 
 # Rack
@@ -46,6 +70,12 @@ class StoreRoomAdmin(admin.ModelAdmin):
         qs = super(StoreRoomAdmin, self).get_queryset(request)
         return qs.select_related('rack', 'branch')
     
+    fieldsets = (
+        ('Store Room', {
+            'fields': ('store_room_name', 'rack', 'branch')
+        }),
+    )
+    
 
 # Rack
 @admin.register(Rack)
@@ -62,19 +92,21 @@ class RackAdmin(admin.ModelAdmin):
     
     def rack_location(self, obj):
         return obj.compartment.compartment_name + ', ' + obj.compartment.compartment_location
+    
+    fieldsets = (
+        ('Rack', {
+            'fields': ('rack_name', 'compartment')
+        }),
+    )
 
 # Register your models here.
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display = ('pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'qr_code', 'storeLocation', 'created_at', 'updated_at', 'remarks')
+    list_display = ('pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'qr_code', 'created_at', 'updated_at', 'remarks')
 
     def document(self, obj):
         return obj.document_type.doc_type
     
-    def storeLocation(self, obj):
-        return obj.store_location.store_room_name + ', ' + obj.store_location.branch.branch_name
-    
-
     def qr_code(self, obj):
         # Generate QR code and get the path
         qr_code_path = f"./media/uploads/qr_codes/{obj.pkg_id}_qr_code.png"
@@ -88,7 +120,6 @@ class PackageAdmin(admin.ModelAdmin):
         Status: {obj.status}
         Destruction Eligible Time: {obj.destruction_eligible_time}
         Remarks: {obj.remarks}
-        Store Location: {obj.store_location.store_room_name}, {obj.store_location.branch.branch_name}
         """
         
         generate_qr(data, output_path=qr_code_path)
@@ -165,10 +196,6 @@ class PackageAdmin(admin.ModelAdmin):
                                                 <td>{obj.destruction_eligible_time}</td>
                                             </tr>
                                             <tr>
-                                                <th>Store Location :</th>
-                                                <td>{obj.store_location.store_room_name}, {obj.store_location.branch.branch_name}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Remarks :</th>
                                                 <td>{obj.remarks}</td>
                                             </tr>
@@ -198,17 +225,51 @@ class PackageAdmin(admin.ModelAdmin):
         ''')
 
     qr_code.short_description = "QR Code" 
-    readonly_fields = ['qr_code']
+    readonly_fields = ['qr_code', 'status']
+
+    fieldsets = (
+        ('Package', {
+            'fields': ('pkg_name', 'document_type', 'details')
+        }),
+        (
+            'Package Details', {
+                'fields': ('packaging_size', 'destruction_eligible_time', 'remarks','status'),
+                # 'classes': ('collapse',)
+            }
+        ),
+        (
+            'QR Code', {
+                'fields': ('qr_code',),
+                'classes': ('collapse',)
+            }
+        )
+    )
+
 
 # Package verification
 @admin.register(PackageVerification)
 class PackageVerificationAdmin(admin.ModelAdmin):
-    list_display = ('packages', 'authorizer', 'verification_remarks', 'verification_date')
-
-    def packages(self, obj):
-        return obj.package_id.pkg_id
+    list_display = ('package', 'authorizer', 'status', 'verification_remarks', 'verification_date')
+    
+    def package(self, obj):
+        return obj.package_id.pkg_name
     
     def authorizer(self, obj):
         return obj.authorizer.username
+    
+    def statu(self, obj):
+        return obj.status.status
+    
+    fieldsets = (
+        ('Package Verification', {
+            'fields': ('package', 'authorizer', 'verification_remarks')
+        }),
+        (
+            'Package Verification Status', {
+                'fields': ('status', 'verification_date'),
+                # 'classes': ('collapse',)
+            }
+        )
+    )
     
     

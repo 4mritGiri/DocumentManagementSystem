@@ -2,6 +2,9 @@
 from django import template
 from django.contrib.auth.models import User
 from Package.models import Package, Branch, Document, PackageVerification,Compartment, Rack, StoreRoom
+from DestructionEligible.models import DestructionEligible
+from datetime import timedelta
+from django.utils import timezone
 
 register = template.Library()
 
@@ -53,6 +56,11 @@ def get_total_items_by_status(model, status):
 # def get_total_room_rack_compartment_by_type(type):
 #     return RoomRackCompartment.objects.values(type).distinct().count()
 
+
+
+@register.simple_tag
+def get_expired_destruction_eligible():
+    return DestructionEligible.objects.filter(destruction_eligible_status=True).filter(created_at__lte=timezone.now() - timedelta(days=1)).count()
 
 
 
