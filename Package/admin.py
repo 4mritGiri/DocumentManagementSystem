@@ -1,3 +1,4 @@
+import json
 from django.urls import reverse
 from django.contrib import admin
 from .models import Document, StoreRoom, Compartment, Package, Branch, PackageVerification, Rack
@@ -102,7 +103,7 @@ class RackAdmin(admin.ModelAdmin):
 # Register your models here.
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display = ('pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'qr_code', 'created_at', 'updated_at', 'remarks')
+    list_display = ('pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'qr_code','condition', 'created_at', 'updated_at', 'remarks')
 
     def document(self, obj):
         return obj.document_type.doc_type
@@ -111,18 +112,19 @@ class PackageAdmin(admin.ModelAdmin):
         # Generate QR code and get the path
         qr_code_path = f"./media/uploads/qr_codes/{obj.pkg_id}_qr_code.png"
 
-        data = f"""
-        Package ID: {obj.pkg_id}
-        Package Name: {obj.pkg_name}
-        Document Type: {obj.document_type.doc_type}
-        Details: {obj.details}
-        Packaging Size: {obj.packaging_size}
-        Status: {obj.status}
-        Destruction Eligible Time: {obj.destruction_eligible_time}
-        Remarks: {obj.remarks}
-        """
+        data = {
+            "PackageID": obj.pkg_id,
+            "PackageName": obj.pkg_name,
+            "DocumentType": obj.document_type.doc_type,
+            "Details": obj.details,
+            "PackagingSize": obj.packaging_size,
+            "Status": obj.status,
+            "DestructionEligibleTime": str(obj.destruction_eligible_time),
+            "Remarks": obj.remarks
+        }
+        json_data = json.dumps(data)
         
-        generate_qr(data, output_path=qr_code_path)
+        generate_qr(json_data, output_path=qr_code_path)
         
         
         return mark_safe(f'''
@@ -239,7 +241,7 @@ class PackageAdmin(admin.ModelAdmin):
         ),
         (
             'QR Code', {
-                'fields': ('qr_code',),
+                'fields': ('condition','qr_code',),
                 'classes': ('collapse',)
             }
         )

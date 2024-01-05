@@ -11,8 +11,7 @@ admin.site.index_title = 'Welcome to DMS Admin Portal'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='admin/')),
-
-    # path('admin/logout/', RedirectView.as_view(url='logout/')),
+    path("package/", include("Package.urls")),
     path("", include("dmsApp.urls")),
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 

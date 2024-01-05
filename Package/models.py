@@ -93,6 +93,13 @@ DESTRUCTION_ELIGIBLE_TIME = (
     ('8 Years', '8 Years'),
 )
 
+CONDITION_CHOICES = [
+        ('Good', 'Good'),
+        ('Damaged (Mouse)', 'Damaged (Mouse)'),
+        ('Damaged (Fire)', 'Damaged (Fire)'),
+        ('Damaged (Accident)', 'Damaged (Accident)'),
+    ]
+
 class Package(models.Model):
     pkg_id = models.AutoField(primary_key=True)
     pkg_name = models.CharField(max_length=100)
@@ -102,6 +109,7 @@ class Package(models.Model):
     status = models.CharField(choices=STATUS_CHOICES, default='Pending', max_length=90)
     destruction_eligible_time = models.CharField(choices=DESTRUCTION_ELIGIBLE_TIME, default='1 Year', max_length=90)
     remarks = models.TextField(blank=True, null=True)
+    condition = models.CharField(choices=CONDITION_CHOICES, default='Good', max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

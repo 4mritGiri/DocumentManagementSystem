@@ -29,10 +29,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'dmsApp.apps.DmsappConfig', # dmsApp is the name of the app
-    'Package.apps.PackageConfig', # Package is the name of the app
-    'PackageCollection.apps.PackagecollectionConfig', # PackageCollection is the name of the 
-    'DestructionEligible.apps.DestructioneligibleConfig', # DestructionEligible is the name of the app
+
+    'dmsApp.apps.DmsappConfig',
+    'Package.apps.PackageConfig',
+    'PackageCollection.apps.PackagecollectionConfig',
+    'DestructionEligible.apps.DestructioneligibleConfig',
+    'ScheduledMonitoring.apps.ScheduledmonitoringConfig', 
+    'DocumentApps.apps.DocumentappsConfig',
 ]
 
 JAZZMIN_SETTINGS = {
