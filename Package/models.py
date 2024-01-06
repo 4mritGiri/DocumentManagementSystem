@@ -1,5 +1,8 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
+print("Importing singlas...")
+from . import signals
 
 # Create your models here.
 CLASSIFICATION_TYPE_CHOICES = (
@@ -123,7 +126,7 @@ class Package(models.Model):
 # Package verification
 class PackageVerification(models.Model):
     package = models.ForeignKey(Package, on_delete=models.CASCADE, related_name='verifications')
-    authorizer = models.ForeignKey(User, on_delete=models.CASCADE)
+    authorizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     class VerificationStatus(models.TextChoices):
         PENDING = 'Pending', 'Pending'

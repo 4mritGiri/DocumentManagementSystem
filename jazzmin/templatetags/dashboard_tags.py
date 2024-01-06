@@ -5,12 +5,13 @@ from Package.models import Package, Branch, Document, PackageVerification,Compar
 from DestructionEligible.models import DestructionEligible
 from datetime import timedelta
 from django.utils import timezone
+from dmsApp.models import CustomUser
 
 register = template.Library()
 
 @register.simple_tag
 def get_total_users():
-    return User.objects.count()
+    return CustomUser.objects.count()
 
 @register.simple_tag
 def get_total_store_room():
@@ -19,6 +20,15 @@ def get_total_store_room():
 @register.simple_tag
 def get_total_branch():
     return Branch.objects.count()
+
+# Get Profile Picture
+@register.simple_tag
+def get_profile_picture(user_id):
+    try:
+        user = CustomUser.objects.get(id=user_id)
+        return user.profile_picture if user.profile_picture else 'default/default-avatar.png'
+    except CustomUser.DoesNotExist:
+        return None 
 
 @register.simple_tag
 def get_total_package():
@@ -68,7 +78,7 @@ def get_expired_destruction_eligible():
 def render_custom_cards():
     cards = [
         {
-            "category": 'User', 'icon': 'fas fa-users fa-3x', 'link': 'auth/user/', 'badge_color': "primary", 'title': 'Total Users', 'value': get_total_users
+            "category": 'User', 'icon': 'fas fa-users fa-3x', 'link': 'dmsApp/customuser/', 'badge_color': "primary", 'title': 'Total Users', 'value': get_total_users
         },
         # {
         #     "category": 'Store', 'icon': 'fas fa-store fa-3x', 'link': 'Package/store/', 'badge_color': "warning", 'title': 'Total Store', 'value': get_total_store

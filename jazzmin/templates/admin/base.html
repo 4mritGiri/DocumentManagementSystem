@@ -1,9 +1,10 @@
-{% load i18n static jazzmin admin_urls %}
+{% load i18n static jazzmin admin_urls dashboard_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 {% get_jazzmin_settings request as jazzmin_settings %}
 {% get_jazzmin_ui_tweaks as jazzmin_ui %}
 
+{% load dashboard_tags %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
@@ -151,7 +152,11 @@
 
                 <li class="nav-item dropdown">
                     <a class="nav-link btn" data-toggle="dropdown" href="#" title="{{ request.user }}">
-                        <i class="far fa-user" aria-hidden="true"></i>
+                        {% comment %} User profile {% endcomment %}
+                    
+                    <img style="margin-top: -5px;" src="/media/{% get_profile_picture request.user.id %}" width="30px" class="img-circle elevation-2" alt="User Image">
+
+                    
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-left" id="jazzy-usermenu">
                         <span class="dropdown-header">{% trans 'Account' %}</span>

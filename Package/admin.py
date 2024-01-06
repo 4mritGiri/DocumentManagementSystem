@@ -110,7 +110,7 @@ class PackageAdmin(admin.ModelAdmin):
     
     def qr_code(self, obj):
         # Generate QR code and get the path
-        qr_code_path = f"./media/uploads/qr_codes/{obj.pkg_id}_qr_code.png"
+        qr_code_path = f"./media/qr_codes/{obj.pkg_id}_qr_code.png"
 
         data = {
             "PackageID": obj.pkg_id,
@@ -203,7 +203,7 @@ class PackageAdmin(admin.ModelAdmin):
                                             </tr>
                                         </table>
                                     </div>
-                                    <p style="text-align: center;"><span style="color: #967000;">Note:-</span>Scan this QR code to view the package details.</p>
+                                    <p style="text-align: center;"><span style="color: #967000;">Note:-</span>Scan The qr code to complain your package condition.</p>
                                 </body>
                             </html>
                         `);

@@ -1,10 +1,10 @@
 <!-- templates/select_condition.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Package Condition</title>
+{% extends "base.html" %} {% load humanize %} {% load customfilter %} 
+
+{% block title %}Select Package Condition{% endblock %} 
+{% block pageHeader %}Select Package Condition{% endblock %}
+
+{% block pageContent %}
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -68,9 +68,8 @@
             font-size: 18px;
         }
     </style>
-</head>
-<body>
-    <form method="post" action="{% url 'update_condition' %}">
+    
+    <form method="post" action="{% url 'update-condition' %}">
         {% csrf_token %}
         <div id="package-info">
             {% if package %}
@@ -98,5 +97,5 @@
             document.querySelector('#selected-condition span').innerText = this.value;
         });
     </script>
-</body>
-</html>
+    
+{% endblock %}

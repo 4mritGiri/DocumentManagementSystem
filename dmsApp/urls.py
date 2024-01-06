@@ -7,7 +7,7 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('redirect-admin', RedirectView.as_view(url="/admin"),name="redirect-admin"),
-    path('login',auth_views.LoginView.as_view(template_name="login.html",redirect_authenticated_user = True),name='login'),
+    path('login',auth_views.LoginView.as_view(template_name="Post/login.html",redirect_authenticated_user = True),name='login'),
     path('userlogin', views.login_user, name="login-user"),
     path('user-register', views.registerUser, name="register-user"),
     path('logout',views.logoutuser,name='logout'),

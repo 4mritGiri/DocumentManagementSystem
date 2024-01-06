@@ -30,16 +30,19 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                resp['status']='success'
+                resp['status'] = 'success'
                 if user.is_staff:
                     print("Redirecting to admin page")
-                    return redirect('/profile')
-
+                    return redirect('/admin')
             else:
                 resp['msg'] = "Incorrect username or password"
         else:
             resp['msg'] = "Incorrect username or password"
-    return HttpResponse(json.dumps(resp),content_type="application/json")
+
+    return render(request, 'Post/login.html', {'resp': resp})
+    # return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
 
 #Logout
 def logoutuser(request):
@@ -54,9 +57,9 @@ def home(request):
     else:
         posts = Post.objects.filter(user = request.user).all()
     context['posts'] = posts
-    context['postsLen'] = posts.count()
+    context['postsLen'] = posts.count() 
     print(request.build_absolute_uri())
-    return render(request, 'home.html',context)
+    return render(request, 'Post/home.html',context)
 
 def registerUser(request):
     user = request.user
@@ -76,12 +79,12 @@ def registerUser(request):
         else:
             context['reg_form'] = form
 
-    return render(request,'register.html',context)
+    return render(request,'Post/register.html',context)
 
 @login_required
 def profile(request):
     context['page_title'] = 'Profile'
-    return render(request, 'profile.html',context)
+    return render(request, 'Post/profile.html',context)
 
 @login_required
 def posts_mgt(request):
@@ -89,7 +92,7 @@ def posts_mgt(request):
 
     posts = Post.objects.filter(user = request.user).order_by('title', '-date_created').all()
     context['posts'] = posts
-    return render(request, 'posts_mgt.html', context)
+    return render(request, 'Post/posts_mgt.html', context)
 
 @login_required
 def manage_post(request, pk=None):
@@ -98,7 +101,7 @@ def manage_post(request, pk=None):
     if not pk is None:
         post = Post.objects.get(id = pk)
         context['post'] = post
-    return render(request,'manage_post.html',context)
+    return render(request,'Post/manage_post.html',context)
 
 @login_required
 def save_post(request):
@@ -149,7 +152,7 @@ def shareF(request,id=None):
         context['post'] = post
         context['page_title'] += str(" - " + post.title)
    
-    return render(request, 'share-file.html',context)
+    return render(request, 'Post/share-file.html',context)
 
 @login_required
 def update_profile(request):
@@ -168,7 +171,7 @@ def update_profile(request):
         else:
             context['form'] = form
             
-    return render(request, 'manage_profile.html',context)
+    return render(request, 'Post/manage_profile.html',context)
 
 
 @login_required
@@ -186,6 +189,6 @@ def update_password(request):
     else:
         form = UpdatePasswords(request.POST)
         context['form'] = form
-    return render(request,'update_password.html',context)
+    return render(request,'Post/update_password.html',context)
 
 

@@ -21,6 +21,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # 'admin_volt.apps.AdminVoltConfig',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -228,7 +229,7 @@ ROOT_URLCONF = 'DocumentManagementSystem.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -251,7 +252,7 @@ WSGI_APPLICATION = 'DocumentManagementSystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'dba.sqlite3',
     }
 }
 
@@ -314,3 +315,5 @@ LOGIN_URL = '/login'
 ID_ENCRYPTION_KEY = b'UdhnfelTxqj3q6BbPe7H86sfQnboSBzb0irm2atoFUw='
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+AUTH_USER_MODEL = 'dmsApp.CustomUser'

@@ -1,5 +1,8 @@
+from django.conf import settings
 from django.db import models
 from Package.models import User, Package, StoreRoom
+from django.contrib.auth.models import Group
+
 
 
 class DocumentRequest(models.Model):
@@ -8,9 +11,9 @@ class DocumentRequest(models.Model):
         ('original', 'Request for Original Copy'),
     ]
 
-    requester = models.ForeignKey(User, on_delete=models.CASCADE, related_name='document_requests')
+    requester = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='document_requests')
     remarks = models.TextField(help_text='Remarks (mandatory)')
-    authorizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='authorized_requests')
+    authorizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='authorized_requests')
     authorization_remarks = models.TextField(help_text='Authorization Remarks (mandatory)')
     access_type = models.CharField(max_length=10, choices=ACCESS_TYPE_CHOICES)
 
@@ -32,10 +35,10 @@ class DocumentAccess(models.Model):
 
 class DocumentAccessLog(models.Model):
     document_access = models.ForeignKey(DocumentAccess, on_delete=models.CASCADE, related_name='access_logs')
-    access_provided_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    access_provided_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     access_date = models.DateTimeField(auto_now_add=True)
     return_date = models.DateTimeField(null=True, blank=True)
     return_condition = models.TextField(null=True, blank=True)
 
     def _str_(self):
-        return f"Document Access Log #{self.pk}"
+        return f"Document Access Log #{self.pk}" 

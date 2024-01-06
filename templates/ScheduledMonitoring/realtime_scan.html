@@ -1,9 +1,13 @@
 <!-- templates/realtime_scan.html -->
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Real-time QR Code Scanner</title>
-    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+{% extends "base.html" %} {% load humanize %} {% load customfilter %} 
+
+{% block title %}Real-time QR Code Scannerr{% endblock %} 
+
+{% block pageHeader %}Real-time QR Code Scannerr{% endblock %}
+
+ {% block pageContent %}
+ 
+    {% comment %} <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script> {% endcomment %}
     <style>
       body {
         font-family: sans-serif;
@@ -24,10 +28,9 @@
         border-radius: 8px;
       }
     </style>
-  </head>
-  <body>
+    
     <h2 class="title">Real Time QR Code Scanner</h2>
-    <form method="post" action="{% url 'process_qr_code' %}" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <form method="post" action="{% url 'process-qr-code' %}" enctype="multipart/form-data" onsubmit="return validateForm()">
       {% csrf_token %}
       <video id="preview" playsinline></video>
       <input type="hidden" id="scanned-data-input" name="scanned_data" />
@@ -83,5 +86,5 @@
         return true; // or false based on validation result
       }
     </script>
-  </body>
-</html>
+    
+{% endblock pageContent %}

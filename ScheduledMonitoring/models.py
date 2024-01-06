@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from Package.models import StoreRoom, Package, User
 
@@ -16,7 +17,7 @@ class StoreMonitoring(models.Model):
     
 class DamagedPackageReview(models.Model):
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
-    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     review_date = models.DateField(auto_now_add=True)
     damage_comments = models.TextField()
     is_resolved = models.BooleanField(default=False)

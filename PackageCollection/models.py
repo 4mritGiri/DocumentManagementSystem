@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.db import models
 from Package.models import Package,User, Compartment, StoreRoom
 
 # PackageCollection models
 class PackageCollection(models.Model):
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
-    collector = models.ForeignKey(User, on_delete=models.CASCADE)
+    collector = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     collection_date = models.DateTimeField(auto_now_add=True)
     tampering_verification_remarks = models.TextField()
     store_location = models.ForeignKey(StoreRoom, on_delete=models.CASCADE)

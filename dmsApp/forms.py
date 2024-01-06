@@ -20,7 +20,7 @@ class UserRegistration(UserCreationForm):
         # Add more fields here
 
         def clean_email(self):
-            email = self.clean_data['email'].lower()
+            email = self.clean_data['email'].lower() # type: ignore
             try:
                 user = User.objects.get(email=email)
             except Exception as e:
@@ -28,7 +28,7 @@ class UserRegistration(UserCreationForm):
             raise forms.ValidationError(f"Email {user.email} mail is already exists/taken.")
         
         def clean_username(self):
-            username = self.clean_data['username'].lower()
+            username = self.clean_data['username'].lower() # type: ignore
             try:
                 user = User.objects.get(username=username)
             except Exception as e:
@@ -89,7 +89,7 @@ class SavePost(forms.ModelForm):
     def clean_title(self):
         id = self.instance.id if not self.instance == None else 0
         try:
-            if id.isnumeric():
+            if id.isnumeric(): # type: ignore
                  post = Post.objects.exclude(id = id).get(title = self.cleaned_data['title'])
             else:
                  post = Post.objects.get(title = self.cleaned_data['title'])
@@ -105,4 +105,5 @@ class SavePost(forms.ModelForm):
             return user
         except:
             raise forms.ValidationError("User ID is unrecognize.")
+
 

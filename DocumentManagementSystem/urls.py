@@ -10,9 +10,13 @@ admin.site.index_title = 'Welcome to DMS Admin Portal'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='admin/')),
-    path("package/", include("Package.urls")),
     path("", include("dmsApp.urls")),
+    path("package/", include("Package.urls")),
+    path("document/", include("DocumentApps.urls")),
+    path("scheduled-monitoring/", include("ScheduledMonitoring.urls")),
+    # path("package-collection/", include("PackageCollection.urls")),
+    # path("destruction-eligible/", include("DestructionEligible.urls")),
+    
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 # Add static and media file serving during development

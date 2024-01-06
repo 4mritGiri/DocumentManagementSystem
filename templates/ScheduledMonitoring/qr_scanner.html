@@ -1,9 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner</title>
+{% extends "base.html" %} {% load humanize %} {% load customfilter %} 
+
+{% block title %}QR Code Scanner{% endblock %} 
+
+{% block pageHeader %}QR Code Scanner{% endblock %}
+
+{% block pageContent %}
+
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -59,10 +61,9 @@
             margin-top: 10px;
         }
     </style>
-</head>
-<body>
+
     <h2>QR Code Scanner</h2>
-    <form method="post" action="{% url 'process_qr_code' %}" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <form method="post" action="{% url 'process-qr-code' %}" enctype="multipart/form-data" onsubmit="return validateForm()">
         {% csrf_token %}
         <label for="image">Upload Image:</label>
         <input type="file" name="image" accept="image/*">
@@ -86,6 +87,6 @@
         }
     </script>
     <!-- Add a link/button to navigate to the real-time scanner -->
-    <a href="{% url 'realtime_scan' %}">Go to Real-time Scanner</a>
-</body>
-</html>
+    <a href="{% url 'realtime-scan' %}">Go to Real-time Scanner</a>
+
+{% endblock  %}
