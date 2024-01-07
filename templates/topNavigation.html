@@ -75,18 +75,29 @@
           </li>
           {% endif %}
         </ul>
-
+ 
         <ul class="navbar-nav d-flex flex-row">
           {% if user.id %} {% if user.profile.user_type == 1 %} {% endif %}
           <li class="nav-item me-3 me-lg-0">
             <a class="nav-link" href="{% url 'profile' %}">
               <span class="me-1"
-                ><img
+                >
+                {% if user.profile_picture %}
+                  <img
+                  style="width: 26px; height: 26px; border-radius: 100%; object-fit: cover; object-position: center; border-color: #2f1; border-width: 1px; border-style: solid;"
+                  src="{{ MEDIA_URL }}/{{user.profile_picture}}"
+                  alt="User Avatar"
+                  id="user-avatar"
+                  class="rounded-circle" />
+                  {% else %}
+                  <img
                   src="{{ MEDIA_URL }}/default/default-avatar.png"
                   alt="User Avatar"
                   id="user-avatar"
-                  class="img-thumbnail rounded-circle" /></span
-              >Howdy, {{ user.first_name }} {{user.last_name}}
+                  class="img-thumbnail rounded-circle" />
+                {% endif %}
+                  </span
+              >{% if user %}{{ user.username }} {% else %}Howdy{% endif %}
             </a>
             <!-- <a class="nav-link" href="{% url 'logout' %}">Logout</a> -->
           </li>

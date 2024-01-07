@@ -8,22 +8,28 @@ from pyzbar.pyzbar import decode
 from .models import Package
 from django.http import JsonResponse
 from django.urls import reverse
-
-def qr_scanner(request):
-    return render(request, 'ScheduledMonitoring/qr_scanner.html')
-
-def realtime_scan(request):
-    return render(request, 'ScheduledMonitoring/realtime_scan.html')
-
 import logging
+from django.contrib.auth.decorators import login_required
+
+context = {
+    'page_title' : 'Document Management System',
+}
 
 logger = logging.getLogger(__name__)
+# login required
+
+@login_required(login_url='login')
+def qr_scanner(request):
+    context['page_title'] = 'QR Scanner'
+    return render(request, 'ScheduledMonitoring/qr_scanner.html')
 
 @csrf_exempt
+@login_required(login_url='login')
 def process_qr_code(request):
+    context['page_title'] = 'Process QR Code'
     if request.method == 'GET':
         # Handle GET request if needed
-        return render(request, 'ScheduledMonitoring/qr_scanner_result.html', {'result': 'Invalid request method. Use POST instead.'})
+        return render(request, 'ScheduledMonitoring/qr_scanner.html', {'result': 'Invalid request method. Use POST instead.'})
 
     if request.method == 'POST':
         if 'image' in request.FILES:
@@ -49,9 +55,9 @@ def process_qr_code(request):
                     return render(request, 'ScheduledMonitoring/select_condition.html', {'package': package})
 
                 except (ValueError, Package.DoesNotExist):
-                    return render(request, 'ScheduledMonitoring/qr_scanner_result.html', {'result': 'Package not found or invalid QR code data.'})
+                    return render(request, 'ScheduledMonitoring/qr_scanner.html', {'result': 'Package not found or invalid QR code data.'})
                 
-            return render(request, 'ScheduledMonitoring/qr_scanner_result.html', {'result': 'QR code does not contain a valid package ID.'})
+            return render(request, 'ScheduledMonitoring/qr_scanner.html', {'result': 'QR code does not contain a valid package details.'})
 
         else:
             # Get the PackageId from the POST request
@@ -66,11 +72,13 @@ def process_qr_code(request):
                 # Render a template to select the condition
                 return render(request, 'ScheduledMonitoring/select_condition.html', {'package': package})
             except (ValueError, Package.DoesNotExist):
-                return render(request, 'ScheduledMonitoring/qr_scanner_result.html', {'result': 'Package not found or invalid QR code data.'})
+                return render(request, 'ScheduledMonitoring/qr_scanner.html', {'result': 'Package not found or invalid QR code data.'})
         
-    return render(request, 'ScheduledMonitoring/qr_scanner_result.html', {'result': 'Invalid request method. NOT GET or POST.'})
+    return render(request, 'ScheduledMonitoring/qr_scanner.html', {'result': 'Invalid request method. NOT GET or POST.'})
 
+@login_required(login_url='login')
 def update_condition(request):
+    context['page_title'] = 'Update Condition'
     if request.method == 'POST':
         package_id = request.POST.get('package_id')
         condition = request.POST.get('condition')
@@ -81,9 +89,9 @@ def update_condition(request):
             package.save()
 
             # Pass the selected condition to qr_scanner_result.html
-            return render(request, 'ScheduledMonitoring/qr_scanner_result.html', {'result': 'Package condition updated successfully.', 'package_condition': condition})
+            return render(request, 'ScheduledMonitoring/qr_scanner.html', {'result': 'Package condition updated successfully.', 'package_condition': condition})
 
         except (ValueError, Package.DoesNotExist):
-            return render(request, 'ScheduledMonitoring/qr_scanner_result.html', {'result': 'Package not found or invalid data.'})
+            return render(request, 'ScheduledMonitoring/qr_scanner.html', {'result': 'Package not found or invalid data.'})
 
-    return redirect('qr-scanner')  # Redirect back to the QR scanner if accessed directly
+    return redirect('qr-scanner')

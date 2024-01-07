@@ -1,9 +1,6 @@
 <!-- templates/select_condition.html -->
 {% extends "base.html" %} {% load humanize %} {% load customfilter %} 
-
-{% block title %}Select Package Condition{% endblock %} 
-{% block pageHeader %}Select Package Condition{% endblock %}
-
+<title>{% block title %}Select Condition{% endblock title %}</title>
 {% block pageContent %}
     <style>
         body {
@@ -68,13 +65,28 @@
             font-size: 18px;
         }
     </style>
+
+    {% comment %} pkg_id
+pkg_name
+document_type
+details
+packaging_size
+status
+destruction_eligible_time
+remarks
+condition
+created_at
+updated_at {% endcomment %}
     
     <form method="post" action="{% url 'update-condition' %}">
         {% csrf_token %}
         <div id="package-info">
             {% if package %}
-                <p>Package Name: {{ package.pkg_name }}</p>
-                <p>Store Location: {{ package.store_location }}</p>
+                <p>Package ID: {{ package.pkg_id }}</p>
+                <p>Package Weight: {{ package.pkg_name }}</p>
+                <p>Created At: {{ package.created_at }}</p>
+            {% else %}
+                <p>Package not found.</p>
             {% endif %}
         </div>
 
@@ -88,13 +100,16 @@
         </select>
         <input type="hidden" name="package_id" value="{{ package.pkg_id }}">
         <input type="submit" value="Update Condition">
-        <p id="selected-condition">Selected Condition: <span></span></p>
+        <p id="selected-condition" style="display: none;">Selected Condition: <span style="color: blue;"></span></p>
     </form>
 
     <script>
+        var selectedCondition = document.getElementById('selected-condition');
+
         // Add a script to update the selected condition display
         document.getElementById('condition').addEventListener('change', function () {
-            document.querySelector('#selected-condition span').innerText = this.value;
+            document.querySelector('#selected-condition span').innerText = `${this.value}`;
+            selectedCondition.style.display = 'block';
         });
     </script>
     

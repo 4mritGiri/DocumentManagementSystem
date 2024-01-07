@@ -8,7 +8,7 @@
     {% if page_title %}
     <title>{{ page_title }} | Document Management System</title>
     {% else %}
-    <title>Document Management System</title>
+    <title> {% block title %}{% endblock title %} | Document Management System</title>
     {% endif %}
     <link rel="icon" href="{{ MEDIA_URL }}/default/logo.png" />
     <link
@@ -55,7 +55,7 @@
     {% include "topNavigation.html" %} 
 
     {% endblock TopNavigation %}
-    <main class="py-5">
+    <main class="py-2">
       <div class="container mb-3">
         {% if messages %}
         <div class="row">
@@ -142,16 +142,15 @@
     </div>
 
     <!--Footer-->
-    <footer class="bg-light text-lg-start">
+    {% comment %} <footer class="bg-light text-lg-start">
       <!-- Copyright -->
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
         © {% now 'Y' %} Copyright:
-        <a class="text-dark" href="#" target="_blank"
-          >Document Management System</a
+        <a class="text-dark" href="#" target="_blank">Document Management System</a
         >
       </div>
       <!-- Copyright -->
-    </footer>
+    </footer> {% endcomment %}
     <script>
       const loader = $("<div>");
       loader.attr("id", "pre-loader");

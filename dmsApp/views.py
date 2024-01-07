@@ -1,27 +1,30 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from DocumentManagementSystem.settings import MEDIA_ROOT, MEDIA_URL
 import json
 from django.contrib import messages
-from django.contrib.auth.models import User
-from django.http import HttpResponse
 from dmsApp.forms import UserRegistration, SavePost, UpdateProfile, UpdatePasswords
-from dmsApp.models import Post
+from dmsApp.models import CustomUser, Post
 from cryptography.fernet import Fernet
 from django.conf import settings
 import base64
+from django.http import HttpResponse, JsonResponse
+
 # Create your views here.
  
 context = {
-    'page_title' : 'File Management System',
+    'page_title' : 'Document Management System',
 }
 #login
 def login_user(request):
+    context['page_title'] = "Login"
     logout(request)
-    resp = {"status":'failed','msg':''}
+    resp = {"status": 'failed', 'msg': ''}
     username = ''
     password = ''
+
     if request.POST:
         username = request.POST['username']
         password = request.POST['password']
@@ -31,18 +34,20 @@ def login_user(request):
             if user.is_active:
                 login(request, user)
                 resp['status'] = 'success'
-                if user.is_staff:
-                    print("Redirecting to admin page")
-                    return redirect('/admin')
+                if user.is_superuser:
+                    resp['is_superuser']=True
+                    return JsonResponse(resp)
+                else:
+                    resp['is_superuser']=False
+                    return JsonResponse(resp)
             else:
-                resp['msg'] = "Incorrect username or password"
+                resp['msg'] = "Incorrect username or password. Please try again."
+                return JsonResponse(resp)
         else:
             resp['msg'] = "Incorrect username or password"
-
-    return render(request, 'Post/login.html', {'resp': resp})
+    return redirect('login')
+    # return JsonResponse(resp)
     # return HttpResponse(json.dumps(resp), content_type="application/json")
-
-
 
 #Logout
 def logoutuser(request):
@@ -79,7 +84,7 @@ def registerUser(request):
         else:
             context['reg_form'] = form
 
-    return render(request,'Post/register.html',context)
+    return render(request,'Auth/register.html',context)
 
 @login_required
 def profile(request):
@@ -157,11 +162,12 @@ def shareF(request,id=None):
 @login_required
 def update_profile(request):
     context['page_title'] = 'Update Profile'
-    user = User.objects.get(id = request.user.id)
+    user = CustomUser.objects.get(id = request.user.id)
+    print(user)
     if not request.method == 'POST':
         form = UpdateProfile(instance=user)
         context['form'] = form
-        print(form)
+
     else:
         form = UpdateProfile(request.POST, instance=user)
         if form.is_valid():
@@ -189,6 +195,6 @@ def update_password(request):
     else:
         form = UpdatePasswords(request.POST)
         context['form'] = form
-    return render(request,'Post/update_password.html',context)
+    return render(request,'Auth/update_password.html',context)
 
 
