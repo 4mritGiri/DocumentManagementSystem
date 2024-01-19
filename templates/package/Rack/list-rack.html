@@ -1,0 +1,83 @@
+{% extends 'package/table.html' %} 
+{% block title %}Rack List{% endblock title %} 
+
+{% block tableTitle %}
+<i class="flaticon2-percentage text-primary"></i> Rack List {% endblock tableTitle %} 
+
+{% block linkOrModal %} data-toggle="modal" data-target="#addRackModal" {% endblock linkOrModal %}
+{% block tHead %}
+<tr>
+  <th>Rack ID</th>
+  <th>Rack Name</th>
+  <th>Compartment</th>
+  <th>Actions</th>
+</tr>
+{% endblock tHead %} {% block tBody %} {% for rack in racks %}
+<tr>
+  <td>{{ rack.rack_id }}</td>
+  <td>{{ rack.rack_name }}</td>
+  <td>{{ rack.compartment }}</td>
+  <td nowrap>
+    <a href="#" class="text-center m-1" title="View">
+      <i class="fas fa-eye fa-lg fa-fw text-success"></i>
+    </a>
+    <a href="" class="text-center m-1" title="Edit Rack" data-toggle="modal" data-target="#editRackModal{{ rack.pk }}">
+      <i class="fas fa-edit fa-lg fa-fw text-primary"></i>
+    </a>
+    <a href="#" class="text-center m-1" title="Delete Rack" onclick="deleteRack('{{ rack.rack_id }}', '{{ rack.rack_name }}')">
+      <i class="fas fa-trash-alt text-danger"></i> 
+    </a> 
+  </td>
+</tr>
+
+
+<!-- Include -->
+{% include "package/Rack/edit-rack.html" %}
+
+
+<script>
+  function deleteRack(id, name) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+      title: "DO YOU WANT TO DELETE THIS RACK ???",
+      text: "Rack Name: " + name,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send AJAX request to delete the store room
+        $.ajax({
+          url: `/package/delete-rack/${id}`,
+          success: function (data) {
+            swalWithBootstrapButtons.fire({
+              title: "Deleted!",
+              text: `Rack Name: ${name} has been deleted.`,
+              icon: "success"
+            }).then(() => {
+              // Reload the page or update the table after successful deletion
+              location.reload();
+            });
+          },
+          error: function (error) {
+            swalWithBootstrapButtons.fire({
+              title: "Error",
+              text: "Failed to delete store room",
+              icon: "error"
+            });
+          }
+        });
+      }
+    });
+  }
+</script>
+{% endfor %} {% endblock tBody %}

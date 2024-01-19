@@ -1,0 +1,38 @@
+{% extends "DocumentApps/add-document.html" %}
+
+<!-- Modal ID -->
+{% block modalId %} id="editDocumentModal{{ document.pk }}" {% endblock modalId %}
+
+<!-- Modal Title -->
+{% block modalTitle %}<i class="fas fa-edit"></i> Edit Document {% endblock modalTitle %}
+
+<!-- Form Action -->
+{% block formAction %} action="{% url 'edit-document' id=document.doc_id %}" {% endblock formAction %}
+
+
+<!-- =========== All <inputs> =========== -->
+    {% block valueId %}
+    <div class="input-group mb-3">
+        <span class="btn border-secondary bg-light side-label"><i class="fas fa-key"></i></span><span class="text-danger require-dot" title="required">*</span>
+        <input type="text" name="doc_id" value={{ document.doc_id }} id="doc_id" class="form-control" readonly required>
+    </div>
+    {% endblock valueId %}
+    
+    <!-- classificationOption -->
+    {% block classificationOption %} 
+    <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ document.doc_classification_type }} </option>
+    {% endblock classificationOption %}
+
+    <!-- docTypeOption -->
+    {% block docTypeOption %} 
+    <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ document.doc_type }} </option>
+    {% endblock docTypeOption %}
+
+    <!-- Details Options -->
+    {% block detailsOptions %}
+    value={{ document.doc_details }}
+    {% endblock detailsOptions %}
+
+
+<!-- Button Action -->
+{% block btnAction %}<i class="fa fa-server" aria-hidden="true"></i>&nbsp; Save Changes {% endblock btnAction %}

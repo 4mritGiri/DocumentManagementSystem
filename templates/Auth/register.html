@@ -1,69 +1,104 @@
-{% extends 'base.html' %}{% load static %}{% block pageContent %}
+{% extends "Auth/authBase.html" %} 
 
-<style>
-    main {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: auto;
-    }
-</style>
-<div class="row justify-content-center">
-    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-        <div class="card card-default rounded-0 shadow">
-            <div class="card-header">
-                <h4 class="card-title"><b>Create New User</b></h4>
-            </div>
-            <div class="card-body">
-                <div class="container-fluid">
-                    <form id="register-user" method="POST" action="{% url 'register-user' %}" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="mdc-layout-grid">
-                            <div class="mdc-layout-grid__inner">
-                                <div class="form-group mb-3">
-                                    <label for="first_name" class="control-label">First Name</label>
-                                    <input type="text" class="form-control rounded-0" name="first_name" id="first_name" value="{{ reg_form.data.first_name }}" required="required">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="last_name" class="control-label">Last Name</label>
-                                    <input type="text" class="form-control rounded-0" name="last_name" id="last_name" value="{{ reg_form.data.last_name }}" required="required">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="email" class="control-label">Email</label>
-                                    <input type="email" class="form-control rounded-0" name="email" id="email" value="{{ reg_form.data.email }}" required="required">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="username" class="control-label">Username</label>
-                                    <input type="text" class="form-control rounded-0" name="username" id="username" value="{{ reg_form.data.username }}" required="required">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="password1" class="control-label">Password</label>
-                                    <input type="password" class="form-control rounded-0" name="password1" id="password1" value="{{ reg_form.data.password1 }}" required="required">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="password2" class="control-label">Confirm Password</label>
-                                    <input type="password" class="form-control rounded-0" name="password2" id="password2" value="{{ reg_form.data.password2 }}" required="required">
-                                </div>
-                                {% for field in reg_form %} {% for error in field.errors %}
-                                <div class="alert alert-danger my-2">
-                                    <p>{{ error }}</p>
-                                </div>
-                                {% endfor %} {% endfor %}
-                                <div class="form-group mb-3">
-                                    <div class="d-flex w-100 justify-content-end">
-                                        <button class="btn btn-sm rounded-0 btn-primary col-4">
-                                                Login
-                                            </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+{% block loginTitle %}Register{% endblock loginTitle %}
+
+{% block authBody %}
+<!--begin::Login Sign up form-->
+<div class="login-signup">
+  <div class="mb-12">
+    <h3 class="opacity-40 font-weight-normal">Sign Up</h3>
+    <p class="opacity-40">Enter your details to create your account</p>
+  </div>
+  <form
+    class="form text-center"
+    id="kt_login_signup_form"
+    method="POST"
+    action="{% url 'register-user' %}"
+  >
+    {% csrf_token %}
+    <div class="form-group row">
+      <div class="col-6">
+        <input
+          class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+          type="text"
+          placeholder="First Name"
+          name="first_name"
+          id="first_name"
+          value="{{ reg_form.data.first_name }}"
+        />
+      </div>
+      <div class="col-6">
+        <input
+          class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+          type="text"
+          placeholder="Last Name"
+          name="last_name"
+          id="last_name"
+          value="{{ reg_form.data.last_name }}"
+        />
+      </div>
     </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="text"
+        placeholder="Email"
+        name="email"
+        id="email"
+        value="{{ reg_form.data.email }}"
+        autocomplete="on"
+      />
+    </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="text"
+        placeholder="username"
+        name="username"
+        id="username"
+        value="{{ reg_form.data.username }}"
+      />
+    </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="password"
+        placeholder="Password"
+        name="password1"
+        id="password1"
+        value="{{ reg_form.data.password1 }}"
+      />
+    </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="password"
+        placeholder="Confirm Password"
+        name="password2"
+        id="password2"
+        value="{{ reg_form.data.password2 }}"
+      />
+    </div>
+    {% for field in reg_form %} {% for error in field.errors %}
+    <div class="alert alert-danger my-2">
+      <p>{{ error }}</p>
+    </div>
+    {% endfor %} {% endfor %}
+    <div class="form-group">
+      <button
+        id="kt_login_signup_submit"
+        class="btn btn-pill btn-primary opacity-90 px-15 py-3 m-2"
+      >
+        Sign Up
+      </button>
+      <a href="{% url 'home-page' %}"
+      class="btn btn-pill btn-outline-white opacity-70 px-15 py-3 m-2"
+      >
+      Sign In
+    </a>
+    {% comment %} id="kt_login_signup_cancel" {% endcomment %}
+    </div>
+  </form>
 </div>
-{% endblock pageContent %}
+<!--end::Login Sign up form-->
+{% endblock authBody %}

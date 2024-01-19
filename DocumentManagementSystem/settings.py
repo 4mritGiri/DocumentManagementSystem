@@ -21,7 +21,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'admin_volt.apps.AdminVoltConfig',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +36,10 @@ INSTALLED_APPS = [
     'DestructionEligible.apps.DestructioneligibleConfig',
     'ScheduledMonitoring.apps.ScheduledmonitoringConfig', 
     'DocumentApps.apps.DocumentappsConfig',
+    'dashboard.apps.DashboardConfig',
+
+
+    'channels',
 ]
 
 JAZZMIN_SETTINGS = {
@@ -54,10 +57,10 @@ JAZZMIN_SETTINGS = {
     "site_logo": "../media/default/logo.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "../media/default/fms-logo.png",
+    "login_logo": "static/assets/media/logos/dmss.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
-    "login_logo_dark": "../media/default/a.png",
+    "login_logo_dark": "static/assets/media/logos/dmss.png",
 
     # CSS classes that are applied to the logo above
     "site_logo_classes": "img-circle",
@@ -238,12 +241,14 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
+                'Package.global_context.global_context',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'DocumentManagementSystem.wsgi.application'
+ASGI_APPLICATION = 'DocumentManagementSystem.asgi.application'
 
 
 # Database

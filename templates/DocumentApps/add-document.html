@@ -1,0 +1,67 @@
+{% extends "modalBase.html" %}
+
+<!-- Modal For Create Document -->
+{% block modalId %} id="addDocumentModal" {% endblock modalId %}
+
+{% block modalTitle %} <i class="fas fa-plus"></i>&nbsp; Add Document{% endblock modalTitle %} 
+
+{% block modalBody %}
+<form method="POST" {% block formAction %} action="{% url 'add-document' %}" {% endblock formAction %} >
+  {% csrf_token %}
+  <div class="modal-body">
+    {% block valueId %}{% endblock valueId %}
+
+    <!-- Classification Type select -->
+    <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"><i class="fa fa-server" aria-hidden="true"></i></span>
+      <span class="text-danger require-dot" title="required">*</span>
+      <select name="doc_classification_type" class="form-control" required>
+        {% block classificationOption %}
+        <option value="" hidden>Select Classification Type</option>
+        {% endblock classificationOption %}
+        {% for classification, _ in doc_classification_type %}
+          <option value="{{ classification }}">{{ classification }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Document Type select -->
+    <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"><i class="fa fa-server" aria-hidden="true"></i></span>
+      <span class="text-danger require-dot" title="required">*</span>
+      <select name="doc_type" class="form-control" required>
+        {% block docTypeOption %}
+        <option value="" hidden>Select Document Type</option>
+        {% endblock docTypeOption %}
+        {% for doc_type, _ in doc_type %}
+          <option value="{{ doc_type }}">{{ doc_type }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Document Details -->
+    <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"><i class="fa fa-server" aria-hidden="true"></i></span>
+      <span class="text-danger require-dot" title="required">*</span>
+      <input type="text" name="doc_details" class="form-control" maxlength="255" placeholder="Document Details*" {% block detailsOptions %}{% endblock detailsOptions %} required />
+    </div>
+
+    <div class="mt-4 d-flex justify-content-end" style="width: 100%">
+      <button type="submit" class="btn btn-success mb-3">
+        {% block btnAction %}<i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Add Document{% endblock btnAction %}
+      </button>
+      <button type="reset" class="btn btn-outline-dark mb-3 ml-2" title="Reset">
+        <i class="fa fa-sync-alt" aria-hidden="true"></i>&nbsp;
+      </button>
+      <button
+        type="button"
+        data-dismiss="modal"
+        class="btn btn-outline-danger mb-3 ml-2"
+        title="Close"
+      >
+        <i class="fa fa-times" aria-hidden="true"></i>&nbsp;
+      </button>
+    </div>
+  </div>
+</form>
+{% endblock modalBody %}

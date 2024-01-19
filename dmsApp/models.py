@@ -1,4 +1,3 @@
-from turtle import title
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -34,13 +33,15 @@ class Post(models.Model):
 USER_ROLE_CHOICES = (
     ('Inputter', 'Inputter'),
     ('Authorizer', 'Authorizer'),
+    ('Admin', 'Admin'),
+    # ('Super Admin', 'Super Admin'),
 )
 
 class CustomUser(AbstractUser):
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
     user_type = models.CharField(choices=USER_ROLE_CHOICES, default='Inputter', max_length=90)
 
     groups = models.ManyToManyField(Group, related_name='customuser_set', blank=True, verbose_name=_('groups'))
@@ -69,20 +70,6 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
         if os.path.isfile(instance.file_path.path):
             os.remove(instance.file_path.path)
 
-# @receiver(models.signals.pre_save, sender=Post)
-# def auto_delete_file_on_change(sender, instance, **kwargs):
-#     if not instance.pk:
-#         return False
-
-#     try:
-#         old_file = sender.objects.get(pk=instance.pk).file_path
-#     except sender.DoesNotExist:
-#         return False
-
-#     new_file = instance.file_path
-#     if not old_file == new_file:
-#         if os.path.isfile(old_file.path):
-#             os.remove(old_file.path)
            
 @receiver(models.signals.pre_save, sender=Post)
 def auto_delete_file_on_change(sender, instance, **kwargs):

@@ -1,0 +1,28 @@
+{% extends "package/Compartment/create-compartment.html" %}
+
+<!-- Modal ID -->
+{% block modalId %} id="editCompartmentModal{{ compartment.pk }}" {% endblock modalId %}
+
+<!-- Modal Title -->
+{% block modalTitle %}<i class="fas fa-edit"></i> Edit Compartment {% endblock modalTitle %}
+
+<!-- Form Action -->
+{% block formAction %} action="{% url 'edit-compartment' id=compartment.compartment_id %}" {% endblock formAction %}
+
+
+<!-- =========== All <inputs> =========== -->
+    {% block valueId %}
+    <div class="input-group mb-3">
+        <span class="btn border-secondary bg-light side-label"><i class="fas fa-key"></i></span><span class="text-danger require-dot" title="required">*</span>
+        <input type="text" name="compartment_id" value={{ compartment.compartment_id }} id="compartment_id" class="form-control" readonly required>
+    </div>
+    {% endblock valueId %}
+ 
+    <!-- Name -->
+    {% block valueName %} value="{{ compartment.compartment_name }}" {% endblock valueName %}
+    
+    <!-- Location -->
+    {% block valueLocation %}value="{{ compartment.compartment_location }}"{% endblock valueLocation %}
+
+<!-- Button Action -->
+{% block btnAction %}<i class="fa fa-server" aria-hidden="true"></i>&nbsp; Save Changes {% endblock btnAction %}

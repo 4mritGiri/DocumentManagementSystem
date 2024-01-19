@@ -1,0 +1,104 @@
+{% extends "modalBase.html" %}
+
+ <!-- Modal -->
+{% block modalId %} id="addPackageModal" {% endblock modalId %}
+
+{% block modalTitle %} <i class="fas fa-plus"></i>&nbsp; Add Package{% endblock modalTitle %}
+
+{% block modalBody %}
+      <form method="POST" {% block formAction %} action="{% url 'create-package' %}" {% endblock formAction %}>
+        {% csrf_token %}
+        <div class="modal-body">
+            {% block valueId %}{% endblock valueId %}
+
+            <div class="input-group mb-3">
+              <span class="btn border-secondary bg-light side-label"><i class="fas fa-user-alt"></i></span><span class="text-danger require-dot" title="required">*</span>
+                <input type="text" name="pkg_name" id="pkg_name" class="form-control" maxlength="60" placeholder="Package Name*" {% block valueName %}{% endblock valueName %} required>
+            </div>
+
+            <!-- Document Type select -->
+            <div class="input-group mb-3">
+              <span class="btn border-secondary bg-light side-label"><i class="fa fa-paperclip" aria-hidden="true"></i></span>
+              <span class="text-danger require-dot" title="required">*</span>
+              <select name="document_type" class="form-control" required>
+                {% block docTypeOption %}
+                <option value="" hidden>Select Document Type</option>
+                {% endblock docTypeOption %}
+                {% for doc in documents %}
+                <option value="{{ doc.doc_id }}">{{ doc }}</option>
+                {% endfor %}
+            </select>
+              &nbsp;<span class="btn border-success bg-light" title="Add Document Type" data-toggle="modal" data-target="#addDocumentModal"><i class="fa fa-plus text-success" aria-hidden="true"></i></span>
+            </div>
+
+            <!-- packaging_size select -->
+            <div class="input-group mb-3">
+                <span class="btn border-secondary bg-light side-label"><i class="fa fa-space-shuttle" aria-hidden="true"></i></span>
+                <span class="text-danger require-dot" title="required">*</span>
+                <select name="packaging_size" class="form-control" required>
+                  {% block pkgSizeOption %}
+                  <option value="" hidden>Select Packaging Size</option>
+                  {% endblock pkgSizeOption %}
+                  {% for pkg_size, _ in packaging_size %}
+                  <option value="{{ pkg_size }}">{{ pkg_size }}</option>
+                  {% endfor %}
+              </select>
+              </div>
+
+            <!-- destruction_eligible_time select -->
+            <div class="input-group mb-3">
+                <span class="btn border-secondary bg-light side-label"><i class="fas fa-calendar-times    "></i></span>
+                <span class="text-danger require-dot" title="required">*</span>
+                <select name="destruction_eligible_time" class="form-control" required>
+                  {% block eligibleTimeOption %}
+                  <option value="" hidden>Select Destruction Eligible Time</option>
+                  {% endblock eligibleTimeOption %}
+                  {% for destruction_eligible_time, _ in destruction_eligible_time %}
+                  <option value="{{ destruction_eligible_time }}">{{ destruction_eligible_time }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+
+            <!-- condition select -->
+            <div class="input-group mb-3">
+                <span class="btn border-secondary bg-light side-label"><i class="fas fa-air-freshener    "></i></span>
+                <span class="text-danger require-dot" title="required">*</span>
+                <select name="condition" class="form-control" required>
+                  {% block conditionOption %}
+                  <option value="" hidden>Select Condition</option>
+                  {% endblock conditionOption %}
+                  {% for condition, _ in condition %}
+                  <option value="{{ condition }}">{{ condition }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+
+            <!-- Package details -->
+            <div class="input-group mb-3">
+                <span class="btn border-secondary bg-light side-label"><i class="fa fa-info" aria-hidden="true"></i></span><span class="text-danger require-dot" title="required">*</span>
+                 <input type="text" name="details" id="details" class="form-control" maxlength="60" placeholder="Package Details*" {% block valueDetails %}{% endblock valueDetails %} required>
+            </div>
+
+            <!-- Package Remarks -->
+            <div class="input-group mb-3">
+                <span class="btn border-secondary bg-light side-label"><i class="fa fa-comment" aria-hidden="true"></i></span>
+                 <textarea name="remarks" id="remarks" class="form-control" maxlength="60" placeholder="Package Remarks*" {% block valueRemarks %}{% endblock valueRemarks %} ></textarea>
+            </div>
+
+            
+            <div class="mt-4 d-flex justify-content-end" style="width: 100%;">
+              <button type="submit" class="btn btn-success mb-3">
+                    {% block btnAction %}<i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Add Store Room{% endblock btnAction %}
+                </button>
+                <button type="reset" class="btn btn-outline-dark mb-3 ml-2" title="Reset">
+                    <i class="fa fa-sync-alt" aria-hidden="true"></i>&nbsp;
+                </button>
+                <button type="button" data-dismiss="modal" class="btn btn-outline-danger mb-3 ml-2" title="Close">
+                  <i class="fa fa-times" aria-hidden="true"></i>&nbsp;
+                </button>
+            </div>
+            
+        </div>
+      </form>
+    {% endblock modalBody %}
+    

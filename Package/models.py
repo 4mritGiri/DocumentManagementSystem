@@ -113,6 +113,7 @@ class Package(models.Model):
     destruction_eligible_time = models.CharField(choices=DESTRUCTION_ELIGIBLE_TIME, default='1 Year', max_length=90)
     remarks = models.TextField(blank=True, null=True)
     condition = models.CharField(choices=CONDITION_CHOICES, default='Good', max_length=50)
+    is_sealed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -1,0 +1,31 @@
+{% extends "package/Branch/create-branch.html" %}
+
+<!-- Modal ID -->
+{% block modalId %} id="editBranchModal{{ branch.pk}}" {% endblock modalId %}
+
+<!-- Modal Title -->
+{% block modalTitle %}<i class="fas fa-edit"></i> Edit Branch {% endblock modalTitle %}
+
+<!-- Form Action -->
+{% block formAction %} action="{% url 'edit-branch' id=branch.branch_id %}" {% endblock formAction %}
+
+
+<!-- =========== All <inputs> =========== -->
+    {% block valueId %}
+    <div class="input-group mb-3">
+        <span class="btn border-secondary bg-light side-label"><i class="fas fa-key"></i></span><span class="text-danger require-dot" title="required">*</span>
+        <input type="text" name="branch_id" value={{ branch.branch_id }} id="branch_id" class="form-control" readonly required>
+    </div>
+    {% endblock valueId %}
+    
+     <!-- Code -->
+     {% block valueCode %} value="{{ branch.branch_code }}" {% endblock valueCode %}
+    
+    <!-- Name -->
+    {% block valueName %} value="{{ branch.branch_name }}" {% endblock valueName %}
+    
+    <!-- Location -->
+    {% block valueLocation %}value="{{ branch.branch_location }}"{% endblock valueLocation %}
+
+<!-- Button Action -->
+{% block btnAction %}<i class="fa fa-server" aria-hidden="true"></i>&nbsp; Save Changes {% endblock btnAction %}

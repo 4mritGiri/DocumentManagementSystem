@@ -1,0 +1,99 @@
+{% extends 'package/table.html' %} 
+{% block title %}Package List{% endblock title %}
+{% block tableTitle %}
+ Package List
+{% endblock tableTitle %}
+
+{% block linkOrModal %} data-toggle="modal" data-target="#addPackageModal"{% endblock linkOrModal %}
+{% block tHead %}
+<tr>
+  <th>Package ID</th>
+  <th>Package Name</th>
+  <th>Document Type</th>
+  <th>Details</th>
+  <th>Packaging Size</th>
+  <th>Status</th>
+  <th>Destruction Eligible Time</th>
+  <th>Remarks</th>
+  <th>Condition</th>
+  <th>Created At</th>
+  <th>Updated At</th>
+  <th>Actions</th>
+</tr>
+{% endblock tHead %} {% block tBody %} 
+{% for package in packages %}
+<tr>
+  <td>{{ package.pkg_id }}</td>
+  <td>{{ package.pkg_name }}</td>
+  <td>{{ package.document_type }}</td>
+  <td>{{ package.details }}</td>
+  <td>{{ package.packaging_size }}</td>
+  <td>{{ package.status }}</td>
+  <td>{{ package.destruction_eligible_time }}</td>
+  <td>{{ package.remarks }}</td>
+  <td>{{ package.condition }}</td>
+  <td>{{ package.created_at | date:'m/d/Y (H:i)' }}</td>
+  <td>{{ package.updated_at | date:'m/d/Y (H:i)' }}</td>
+  <td nowrap>
+    <a href="#" class="text-center m-1" title="View">
+      <i class="fas fa-eye fa-lg fa-fw text-success"></i>
+    </a>
+    <a href="" class="text-center m-1" title="Edit Package" data-toggle="modal" data-target="#editPackageModal{{ package.pk }}">
+      <i class="fas fa-edit fa-lg fa-fw text-primary"></i>
+    </a>
+    <a href="#" class="text-center m-1" title="Delete package" onclick="deletePackage('{{ package.pkg_id }}', '{{ package }}')">
+      <i class="fas fa-trash-alt text-danger"></i> 
+    </a> 
+  </td>
+</tr>
+
+<!-- Include -->
+{% include "package/create-package.html" %}
+
+
+<script>
+  function deletePackage(id, name) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+      title: "DO YOU WANT TO DELETE THIS PACKAGE ???",
+      text: "Package: " + name,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send AJAX request to delete the package
+        $.ajax({
+          url: `/package/delete/${id}`,
+          success: function (data) {
+            swalWithBootstrapButtons.fire({
+              title: "Deleted!",
+              text: `Package: ${name} has been deleted.`,
+              icon: "success"
+            }).then(() => {
+              // Reload the page or update the table after successful deletion
+              location.reload();
+            });
+          },
+          error: function (error) {
+            swalWithBootstrapButtons.fire({
+              title: "Error",
+              text: "Failed to delete package.",
+              icon: "error"
+            });
+          }
+        });
+      }
+    });
+  }
+</script>
+{% endfor %} {% endblock tBody %}

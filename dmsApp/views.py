@@ -45,14 +45,14 @@ def login_user(request):
                 return JsonResponse(resp)
         else:
             resp['msg'] = "Incorrect username or password"
-    return redirect('login')
+    return redirect('home-page')
     # return JsonResponse(resp)
     # return HttpResponse(json.dumps(resp), content_type="application/json")
 
 #Logout
 def logoutuser(request):
     logout(request)
-    return redirect('/')
+    return redirect('login')
 
 @login_required
 def home(request):
@@ -63,7 +63,7 @@ def home(request):
         posts = Post.objects.filter(user = request.user).all()
     context['posts'] = posts
     context['postsLen'] = posts.count() 
-    print(request.build_absolute_uri())
+    # print(request.build_absolute_uri())
     return render(request, 'Post/home.html',context)
 
 def registerUser(request):
@@ -80,10 +80,13 @@ def registerUser(request):
             pwd = form.cleaned_data.get('password1')
             loginUser = authenticate(username= username, password = pwd)
             login(request, loginUser)
+            messages.success(request, "Account has been created successfully")
+            # set form to empty
+            form = UserRegistration()
             return redirect('home-page')
         else:
             context['reg_form'] = form
-
+            form = UserRegistration()
     return render(request,'Auth/register.html',context)
 
 @login_required

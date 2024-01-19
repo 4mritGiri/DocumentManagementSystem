@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from .models import CustomUser as User
 from .models import Post
 
 class UserRegistration(UserCreationForm):
@@ -15,25 +16,25 @@ class UserRegistration(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1','password2')
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
         # fields = ('username', 'email', 'first_name', 'last_name', 'password1','password2','role','branch','document_type','store')
         # Add more fields here
 
-        def clean_email(self):
-            email = self.clean_data['email'].lower() # type: ignore
-            try:
-                user = User.objects.get(email=email)
-            except Exception as e:
-                return email
-            raise forms.ValidationError(f"Email {user.email} mail is already exists/taken.")
+    def clean_email(self):
+        email = self.clean_data['email'].lower() # type: ignore
+        try:
+            user = User.objects.get(email=email)
+        except Exception as e:
+            return email
+        raise forms.ValidationError(f"Email {user.email} mail is already exists/taken.")
         
-        def clean_username(self):
-            username = self.clean_data['username'].lower() # type: ignore
-            try:
-                user = User.objects.get(username=username)
-            except Exception as e:
-                return username
-            raise forms.ValidationError(f"Username {user.username} is already exists/taken.")
+    def clean_username(self):
+        username = self.clean_data['username'].lower() # type: ignore
+        try:
+            user = User.objects.get(username=username)
+        except Exception as e:
+            return username
+        raise forms.ValidationError(f"Username {user.username} is already exists/taken.")
         
 
 
@@ -106,4 +107,9 @@ class SavePost(forms.ModelForm):
         except:
             raise forms.ValidationError("User ID is unrecognize.")
 
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'profile_picture', 'bio', 'phone_number', 'address', 'user_type')
 

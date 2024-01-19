@@ -1,118 +1,138 @@
-{% extends 'base.html' %}{% load static %}{% block pageContent %}
+{% extends "Auth/authBase.html" %}
+<!--end::Login Header-->
 
-<title>{% block title %}Login{% endblock title %}</title>
-<style>
-    main {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: auto;
-    } 
-</style>
-<div class="d-flex flex-column w-100 justify-content-center align-items-center">
-    <div class="mb-4">
-        <center>
-            <img src="{{ MEDIA_URL }}/default/fms-logo.png" alt="">
-        </center>
+{% block loginTitle %}Login{% endblock loginTitle %}
+
+{% block authBody %}
+<!--begin::Login Sign in form-->
+<div class="login-signin">
+  <div class="mb-20">
+    <h3 class="opacity-40 font-weight-normal">Sign In To Admin</h3>
+    <p class="opacity-40">Enter your details to login to your account:</p>
+  </div>
+  <form id="login-user">
+    {% csrf_token %}
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="text"
+        placeholder="Email"
+        name="username"
+        id="username"
+        autocomplete="off"
+      />
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-        <div class="card card-default rounded-0 shadow">
-            <div class="card-header">
-                <h4 class="card-title"><b>Login</b></h4>
-            </div>
-            <div class="card-body">
-                <div class="container-fluid">
-                    <form id="login-user">
-                        {% csrf_token %}
-                        <div class="mdc-layout-grid">
-                            <div class="mdc-layout-grid__inner">
-                                <div class="form-group mb-3">
-                                    <label for="username" class="control-label">Username</label>
-                                    <input type="text" class="form-control rounded-10" name="username" id="username" required="required">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="password" class="control-label">Password</label>
-                                    <input type="password" class="form-control rounded-10" name="password" id="password" required="required">
-                                </div>
-                                {% comment %} show error message here {% endcomment %}
-                                
-                                <div class="form-group mb-3">
-                                    <div class="d-flex w-100 justify-content-between align-items-center">
-                                        <div class="col-md-4">
-                                            <a href="{% url 'register-user' %}">Signup</a>
-                                        </div>
-                                        <button class="btn btn-sm rounded-0 btn-primary">
-                                                Login
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="password"
+        placeholder="Password"
+        name="password"
+        id="password"
+      />
     </div>
+    {% comment %}
+    <div
+      class="form-group d-flex flex-wrap justify-content-between align-items-center px-8 opacity-60"
+    >
+      <div class="checkbox-inline">
+        <label class="checkbox checkbox-outline checkbox-white text-white m-0">
+          <input type="checkbox" name="remember" />
+          <span></span>
+          Remember me
+        </label>
+      </div>
+      <a
+        href="javascript:;"
+        id="kt_login_forgot"
+        class="text-white font-weight-bold"
+        >Forget Password ?</a
+      >
+    </div>
+    {% endcomment %}
+    {% if form.errors %}
+  <div class="alert alert-danger">
+    <strong>Error:</strong> Please correct the following errors.
+      {% for error in form.errors %}
+        <h5>{{ error }}</h5>
+      {% endfor %}
+  </div>
+{% endif %}
+    <div class="form-group text-center mt-10">
+      <button
+        class="btn btn-pill btn-primary opacity-90 px-15 py-3"
+      >
+        Sign In
+      </button>
+    </div>
+  </form>
+  <div class="mt-10">
+    <span class="opacity-40 mr-4"> Don't have an account yet? </span>
+    <a
+      href="{% url "register-user" %}"
+      class="text-white opacity-30 font-weight-normal"
+      >Sign Up</a
+      >
+     <!-- id="kt_login_signup" -->
+  </div>
 </div>
+<!--end::Login Sign in form-->
+{% endblock authBody %}
 
-{% endblock pageContent %} {% block ScriptBlock %}
+{% block ScriptBlock %}
 <script>
-    $(function() {
-        $('#login-user').submit(function(e) {
-            e.preventDefault();
-            var _this = $(this);
-            $('.err-msg').remove();
-            var el = $('<div>');
-            el.addClass("alert alert-danger err-msg");
-            el.hide();
-            if (_this[0].checkValidity() == false) {
-                _this[0].reportValidity();
-                return false;
+  $(function() {
+    $('#login-user').submit(function(e) {
+      e.preventDefault();
+      var _this = $(this);
+      $('.err-msg').remove();
+      var el = $('<div>');
+      el.addClass("alert alert-danger err-msg");
+      el.hide();
+      if (_this[0].checkValidity() == false) {
+        _this[0].reportValidity();
+        return false;
+      }
+      start_loader();
+      $.ajax({
+        headers: {
+          "X-CSRFToken": '{{csrf_token}}'
+        },
+        url: "{% url 'login-user' %}",
+        data: new FormData(_this[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        method: 'POST',
+        dataType: 'json',
+        error: function(err) {
+          console.log(err);
+          alert_toast("An error occurred", 'error');
+          end_loader();
+        },
+        success: function(resp) {
+          if (resp.status === 'success') {
+            if (resp.is_superuser) {
+              window.location.href = "{% url 'admin:index' %}";  // Redirect to the admin page
+            } else {
+              window.location.href = "{% url 'dashboard' %}";  // Redirect to the Dashboard page
             }
-            start_loader();
-            $.ajax({
-                headers: {
-                    "X-CSRFToken": '{{csrf_token}}'
-                },
-                url: "{% url 'login-user' %}",
-                data: new FormData($(this)[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                method: 'POST',
-                type: 'POST',
-                dataType: 'json',
-                error: err => {
-                    console.log(err);
-                    alert_toast("An error occurred", 'error');
-                    end_loader();
-                },
-                success: function(resp) {
-                    if (resp.status === 'success') {
-                        if (resp.is_superuser) {
-                            window.location.href = "{% url 'admin:index' %}";  // Redirect to the admin page
-                        } else {
-                            window.location.href = "{% url 'home-page' %}";  // Redirect to the home page
-                        }
-                    } else if (resp.status === 'failed' && !!resp.msg) {
-                        el.text(resp.msg);
-                        _this.prepend(el);
-                        el.show('slow');
-                        $("html, body, .modal").scrollTop(0);
-                        window.location.href = "{% url 'login' %}";
-                    
-                    } else if(resp.is_login === false){
-                        window.location.href = "{% url 'login' %}";
-                    }else {
-                        el.text("An error occurred", 'error');
-                        console.error(resp);
-                    }
-                    end_loader();
-                }
-            });
-        });
-    });    
+          } else if (resp.status === 'failed' && !!resp.msg) {
+            el.text(resp.msg);
+            _this.prepend(el);
+            el.show('slow');
+            $("html, body, .modal").scrollTop(0);
+            window.location.href = "{% url 'login' %}";
+          } else if (resp.is_login === false) {
+            window.location.href = "{% url 'login' %}";
+          } else {
+            el.text("An error occurred", 'error');
+            console.error(resp);
+          }
+          end_loader();
+        }
+      });
+    });
+  });
 </script>
-{% endblock ScriptBlock %}
+{% endblock %}

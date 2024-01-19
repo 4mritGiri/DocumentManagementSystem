@@ -1,0 +1,25 @@
+
+<!-- Modal -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addModalCenterTitle" aria-hidden="true" {% block modalId %} id="addModal" {% endblock modalId %}>
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLongTitle">
+            {% block modalTitle %} <i class="fas fa-plus"></i>&nbsp; Add {% endblock modalTitle %}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          >
+          <span class="text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% block modalBody %}
+       
+      {% endblock modalBody %} 
+    </div>
+  </div>
+</div>
+

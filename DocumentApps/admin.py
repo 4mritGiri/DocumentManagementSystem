@@ -11,7 +11,7 @@ class DocumentRequestAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             "Requester Details",{
-                'fields': ('requester', 'remarks')
+                'fields': ('requester', 'remarks', 'package')
             }
         ),
         (

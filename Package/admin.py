@@ -103,7 +103,7 @@ class RackAdmin(admin.ModelAdmin):
 # Register your models here.
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display = ('pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'qr_code','condition', 'created_at', 'updated_at', 'remarks')
+    list_display = ('pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'qr_code','condition', 'is_sealed', 'created_at', 'updated_at', 'remarks')
 
     def document(self, obj):
         return obj.document_type.doc_type
@@ -241,7 +241,7 @@ class PackageAdmin(admin.ModelAdmin):
         ),
         (
             'QR Code', {
-                'fields': ('condition','qr_code',),
+                'fields': ('is_sealed', 'condition','qr_code',),
                 'classes': ('collapse',)
             }
         )

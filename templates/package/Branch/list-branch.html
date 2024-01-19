@@ -1,0 +1,90 @@
+{% extends 'package/table.html' %} 
+{% block title %}View Branches{% endblock title %}
+{% block tableTitle %}View Branches{% endblock tableTitle %}
+
+{% block linkOrModal %}
+    data-toggle="modal" data-target="#addBranchModal"
+{% endblock linkOrModal %}
+
+{% block tHead %}
+<tr>
+  <th>Branch ID</th>
+  <th>Branch Code</th>
+  <th>Branch Name</th>
+  <th>Branch Location</th>
+  <th>Actions</th>
+</tr>
+{% endblock tHead %}
+
+{% block tBody %} 
+  {% for branch in branches %}
+  <tr>
+    <td>{{ branch.branch_id }}</td>
+    <td>{{ branch.branch_code }}</td>
+    <td>{{ branch.branch_name }}</td>
+    <td>{{ branch.branch_location }}</td>
+    <td nowrap>
+      <a href="#" class="text-center m-1" title="View Branch">
+        <i class="fas fa-eye fa-lg fa-fw text-success"></i>
+      </a>
+      <a href="" class="text-center m-1" title="Edit Branch" data-toggle="modal" data-target="#editBranchModal{{ branch.pk}}">
+        <i class="fas fa-edit fa-lg fa-fw text-primary"></i>
+      </a>
+      <a href="#" class="text-center m-1" title="Delete Branch" onclick="deleteBranch('{{ branch.branch_id }}', '{{ branch.branch_name }}')">
+        <i class="fas fa-trash-alt text-danger"></i> 
+      </a> 
+    </td>
+  </tr>
+
+  <!-- Include -->
+  {% include "package/Branch/edit-branch.html" %}
+
+<script>
+  function deleteBranch(id, name) {
+    console.log('Deleting store room:', id);
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+      title: "DO YOU WANT TO DELETE THIS BRANCH ???",
+      text: "Branch Name: " + name,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send AJAX request to delete the store room
+        $.ajax({
+          url: `/package/delete-branch/${id}`,
+          success: function (data) {
+            swalWithBootstrapButtons.fire({
+              title: "Deleted!",
+              text: data.message,
+              icon: "success"
+            }).then(() => {
+              // Reload the page or update the table after successful deletion
+              location.reload();
+            });
+          },
+          error: function (error) {
+            swalWithBootstrapButtons.fire({
+              title: "Error",
+              text: "Failed to delete store room",
+              icon: "error"
+            });
+          }
+        });
+      }
+    });
+  }
+</script>
+{% endfor %} {% endblock tBody %}
+ 
