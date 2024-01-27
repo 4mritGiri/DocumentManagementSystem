@@ -1,0 +1,73 @@
+{% extends "modalBase.html" %}
+
+<!-- Modal For Create Compartment -->
+{% block modalId %} id="verifyPackageModal{{ package.pk }}" {% endblock modalId %}
+
+{% block modalTitle %} <i class="fas fa-plus"></i>&nbsp; Package Verification{% endblock modalTitle %} 
+
+{% block modalBody %}
+<form method="POST" {% block formAction %} action="{% url 'package-verification' %}" {% endblock formAction %} >
+  {% csrf_token %}
+  <div class="modal-body">
+    {% block valueId %}
+    <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"><i class="fas fa-key"></i></span><span class="text-danger require-dot" title="required">*</span>
+      <input type="text" name="pkg_id" value={{ package.pkg_id }} id="pkg_id" class="form-control" required readonly>
+  </div>
+    {% endblock valueId %}
+
+    <!-- Authorize -->
+    {% comment %} <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"
+        ><i class="fas fa-person-booth    "></i></span
+      ><span class="text-danger require-dot" title="required">*</span>
+      <input type="text" name="Authorizer" id="Authorizer" class="form-control" maxlength="60" placeholder="Authorizer" {% block valueAuthorizer %}value="{{user.username}}" {% endblock valueAuthorizer %} required readonly />
+    </div> {% endcomment %}
+
+    <!-- Verification Status -->
+    <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"><i class="fa fa-space-shuttle" aria-hidden="true"></i></span>
+      <span class="text-danger require-dot" title="required">*</span>
+      <select name="status" class="form-control" required>
+        {% block verificationStatus %}
+        {% if  package.status == 'Pending' %}
+        <option value="" hidden>Select Verification Status</option>
+        {% else %}
+        <option value="{{ package.status }}" selected>{{ package.status }}</option>
+        {% endif %}
+
+        {% endblock verificationStatus %}
+        {% for status, _ in verification_status %}
+        <option value="{{ status }}">{{ status }}</option>
+        {% endfor %}
+    </select>
+    </div>
+
+    <!-- Verification Remarks -->
+    <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"
+        ><i class="fas fa-person-booth    "></i></span
+      ><span class="text-danger require-dot" title="required">*</span>
+      <input type="text" name="verification_remarks" id="verification_remarks" class="form-control" maxlength="60" placeholder="Verification Remarks*" {% block valueVerificationRemarks %}{% endblock valueVerificationRemarks %} required />
+    </div>
+
+    <div class="mt-4 d-flex justify-content-end" style="width: 100%">
+      <button type="submit" class="btn btn-success mb-3">
+        {% block btnAction %}<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;
+        Verify Package{% endblock btnAction %}
+      </button>
+      <button type="reset" class="btn btn-outline-dark mb-3 ml-2" title="Reset">
+        <i class="fa fa-sync-alt" aria-hidden="true"></i>&nbsp;
+      </button>
+      <button
+        type="button"
+        data-dismiss="modal"
+        class="btn btn-outline-danger mb-3 ml-2"
+        title="Close"
+      >
+        <i class="fa fa-times" aria-hidden="true"></i>&nbsp;
+      </button>
+    </div>
+  </div>
+</form>
+{% endblock modalBody %}

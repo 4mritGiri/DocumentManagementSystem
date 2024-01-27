@@ -1,0 +1,85 @@
+{% extends "modalBase.html" %}
+
+ <!-- Modal -->
+{% block modalId %} id="addPackageCollectionModal" {% endblock modalId %}
+
+{% block modalTitle %} <i class="fas fa-plus"></i>&nbsp; Add Package Collection{% endblock modalTitle %}
+
+{% block modalBody %}
+      <form method="POST" {% block formAction %} action="{% url 'create-package-collection' %}" {% endblock formAction %}>
+        {% csrf_token %}
+        <div class="modal-body">
+            {% block valueId %}{% endblock valueId %}
+
+            <!-- Package select -->
+            <div class="input-group mb-3">
+                <span class="btn border-secondary bg-light side-label">
+                    <i class="fas fa-box-open    "></i>
+                </span>
+                <span class="text-danger require-dot" title="required">*</span>
+                <select name="package" class="form-control" required>
+                {% block packageOption %}
+                <option value="" hidden>Select Packages</option>
+                {% endblock packageOption %}
+                {% for package in packages %}
+                  {% if package.status == "Approved" and not package.is_collected %}
+                    <option value="{{ package.pkg_id }}">{{ package }}</option>
+                  {% endif %}
+                {% endfor %}
+            </select>
+            &nbsp;<button class="btn border-success bg-light" onclick="newWindow()" title="Add Package" data-toggle="modal" data-target="#addPackageModal">
+                <i class="fa fa-plus text-success" aria-hidden="true"></i>
+              </button>
+        </div>
+            
+            <!-- Store Location select -->
+            <div class="input-group mb-3">
+              <span class="btn border-secondary bg-light side-label">
+                <i class="fas fa-store-alt"></i>  
+              </span>
+              <span class="text-danger require-dot" title="required">*</span>
+              <select name="store_location" class="form-control" required>
+                {% block storeLocationOption %}
+                <option value="" hidden>Select Store Location </option>
+                {% endblock storeLocationOption %}
+                {% for store_location in store_rooms %}
+                <option value="{{ store_location.store_room_id }}">{{ store_location }}</option>
+                {% endfor %}
+            </select>
+              &nbsp;<button class="btn border-success bg-light" onclick="newWindow()" title="Add Store Location" data-toggle="modal" data-target="#addStoreRoomModal">
+                <i class="fa fa-plus text-success" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <!-- is_tampered -->
+            <div class="input-group mb-3 d-flex justify-content-center">
+                Tampering detected? &nbsp;
+                <input type="checkbox" id="tampering_detected" name="tampering_detected" value="True">
+                &nbsp;&nbsp;
+                Is Verified? &nbsp;
+                <input type="checkbox" id="is_verified" name="is_verified" value="True" required>
+            </div>
+
+            <!-- tampering_verification_remarks -->
+            <div class="input-group mb-3">
+                <span class="btn border-secondary bg-light side-label"><i class="fa fa-comment" aria-hidden="true"></i></span>
+                <span class="text-danger require-dot" title="required">*</span>
+                 <textarea name="tampering_verification_remarks" id="tampering_verification_remarks" class="form-control" maxlength="60" placeholder="Verification Remarks*" {% block valueVerificationRemarks %}{% endblock valueVerificationRemarks %} required></textarea>
+            </div>
+
+            
+            <div class="mt-4 d-flex justify-content-end" style="width: 100%;">
+              <button type="submit" class="btn btn-success mb-3">
+                    {% block btnAction %}<i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Add Package Collection{% endblock btnAction %}
+                </button>
+                <button type="reset" class="btn btn-outline-dark mb-3 ml-2" title="Reset">
+                    <i class="fa fa-sync-alt" aria-hidden="true"></i>&nbsp;
+                </button>
+                <button type="button" data-dismiss="modal" class="btn btn-outline-danger mb-3 ml-2" title="Close">
+                  <i class="fa fa-times" aria-hidden="true"></i>&nbsp;
+                </button>
+            </div>
+        </div>
+      </form>
+    {% endblock modalBody %}
+    

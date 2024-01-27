@@ -2,10 +2,14 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
-from .models import Package, Branch, Compartment, Rack, Document, StoreRoom
+from .models import Package, Branch, Compartment, Rack, Document, StoreRoom, PackageVerification
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+import qrcode
+import json
+
 
 # Create Branch view
 @login_required
@@ -75,7 +79,7 @@ def createPackage(request):
             and request.POST.get('details')
             and request.POST.get('packaging_size')
             and request.POST.get('destruction_eligible_time')
-            and request.POST.get('condition')
+            or request.POST.get('condition')
             or request.POST.get('remarks')
         ):
             package = Package()
@@ -83,11 +87,15 @@ def createPackage(request):
             package.document_type = Document.objects.get(pk=request.POST.get('document_type'))
             package.details = request.POST.get('details')
             package.packaging_size = request.POST.get('packaging_size')
-            # package.status = request.POST.get('status')
             package.destruction_eligible_time = request.POST.get('destruction_eligible_time')
             package.remarks = request.POST.get('remarks')
-            package.condition = request.POST.get('condition')
+            # package.condition = request.POST.get('condition')
+            package.created_by = request.user
+
+            # Generate QR code for the newly created package
             package.save()
+            qr_code(package)
+
             messages.success(request, 'Package added successfully')
             return redirect('/package/list')
         else:
@@ -95,7 +103,27 @@ def createPackage(request):
             messages.error(request, 'All fields are required')
             return redirect('/package/list')
     else:
-        return redirect('/package/list')
+        return render(request, 'package/create-package.html')
+    
+
+def qr_code(package):
+    # Generate QR code and get the path
+    qr_code_path = f"./media/qr_codes/{package.pkg_id}_qr_code.png"
+
+    data = {
+        "PackageID": package.pkg_id,
+        "PackageName": package.pkg_name,
+        "DocumentType": package.document_type.document,
+        "Details": package.details,
+        "PackagingSize": package.packaging_size,
+        "Status": package.status,
+        "DestructionEligibleTime": str(package.destruction_eligible_time),
+        "Remarks": package.remarks
+    }
+    json_data = json.dumps(data)
+
+    from .utils import generate_qr
+    generate_qr(json_data, output_path=qr_code_path)
     
 
 # Package list view
@@ -104,11 +132,46 @@ def packageList(request):
     '''
     This function is used to list all packages
     '''
-    packages = Package.objects.all()
-    return render(request, 'package/list.html', {'packages': packages})
+    # filter package who created_by and show them if admin is login then show all packages
+    if request.user.is_authenticated and request.user.is_superuser:
+        packages = Package.objects.all()
+    else:
+        if request.user.user_type == 'Authorizer':
+            packages = Package.objects.all()
+        else:
+            packages = Package.objects.filter(created_by=request.user)
+
+    return render(request, 'package/list.html', {'packages': packages}) 
+    
+    
 
 # Function to edit package
+@login_required
+def editPackage(request, id):
+    '''
+    This function is used to edit a package
+    '''
+    package = Package.objects.get(pk=id)
+    qr_code(package)
+    if request.method == 'POST':
+        package.pkg_name = request.POST.get('pkg_name')
 
+        document_value = request.POST.get('document_type')
+        document_id = document_value.split('-')[0].strip()
+        package.document_type = Document.objects.get(pk=document_id)
+
+        package.details = request.POST.get('details')
+        package.packaging_size = request.POST.get('packaging_size')
+        # package.status = request.POST.get('status')
+        package.destruction_eligible_time = request.POST.get('destruction_eligible_time')
+        package.remarks = request.POST.get('remarks')
+        # package.condition = request.POST.get('condition')
+        package.save()
+        
+        messages.success(request, 'Package edited successfully')
+        return redirect('/package/list')
+    else:
+        return render(request, 'package/edit.html', {'package': package})
 
 # Function to delete package
 @login_required
@@ -185,16 +248,15 @@ def createRack(request):
     This function is used to create a rack
     '''
     if request.method == 'POST':
-        if request.POST.get('rack_name') and request.POST.get('compartment'):
+        if request.POST.get('rack_name'):
             rack = Rack()
             rack.rack_name = request.POST.get('rack_name')
-            rack.compartment = Compartment.objects.get(pk=request.POST.get('compartment'))
+            # rack.compartment = Compartment.objects.get(pk=request.POST.get('compartment'))
             rack.save()
             messages.success(request, 'Rack added successfully')
             return redirect('/package/list-rack')
     else:
-        compartments = Compartment.objects.all()
-        return render(request, 'package/Rack/create-rack.html', {'compartments': compartments})
+        return render(request, 'package/Rack/create-rack.html')
        
 
 # Rack list view
@@ -210,7 +272,7 @@ def listRack(request):
         data.append({
             'id': rack.rack_id,
             'rack_name': rack.rack_name,
-            'compartment': str(rack.compartment),  # Convert Compartment to string
+            # 'compartment': str(rack.compartment),  # Convert Compartment to string
             # 'actions': f'<a href="{reverse("rack_show", args=[rack.rack_id])}">show</a> <a href="{reverse("rack_edit", args=[rack.rack_id])}">edit</a>',
         })
 
@@ -331,4 +393,99 @@ def editStoreRoom(request, id):
         racks = Rack.objects.all()
         branches = Branch.objects.all()
         return render(request, 'package/StoreRoom/edit-store-room.html', {'store_room': store_room, 'racks': racks, 'branches': branches})
+
+
+# ========================= Package Verification =========================
+# Function to show package verification list
+    
+@login_required
+def listPackageVerification(request):
+    '''
+    This function is used to list all package verifications
+    '''
+    if request.user.is_authenticated and request.user.is_superuser:
+        package_verifications = PackageVerification.objects.all()
+    else:
+        package_verifications = PackageVerification.objects.filter(authorizer=request.user)
+    return render(request, 'package/PackageVerification/list-package-verification.html', {'package_verifications': package_verifications})
+
+
+# Function to add package verification
+
+# @require_POST
+@login_required
+def packageVerification(request):
+    if request.method == 'POST':
+        pkg_id = request.POST.get('pkg_id')
+        verification_remarks = request.POST.get('verification_remarks')
+        status = request.POST.get('status')
+
+        # Retrieve the package
+        package = Package.objects.get(pk=pkg_id)
+
+        # Create a PackageVerification instance
+        verification = PackageVerification(
+            package=package,
+            authorizer=request.user,
+            status=status,
+            verification_remarks=verification_remarks
+        )
+        verification.save()
+
+        # Send notification to the user who created the package
+        # send_verification_notification(sender=None, instance=verification, created=True)
+
+        return redirect('/package/list-package-verification')
+    
+    else:
+        
+        return render(request, 'package/PackageVerification/package-verification.html', {})
+
+
+# Function to show indivisual package verification
+@login_required
+def packageVerificationView(request, id):
+    '''
+    This function is used to show a package verification
+    '''
+    package_verification = PackageVerification.objects.get(pk=id)
+    if package_verification != None:
+        return render(request, 'package/PackageVerification/package-verification-view.html', {'package_verification': package_verification})
+
+
+# Function to delete package verification
+@login_required
+def deletePackageVerification(request, id):
+    '''
+    This function is used to delete a package verification
+    '''
+    package_verification = PackageVerification.objects.get(pk=id)
+    package_verification.delete()
+    messages.success(request, 'Package verification deleted successfully')
+    return redirect('/package/list-package-verification')    
+
+# Function to edit package verification
+@login_required
+def editPackageVerification(request, id):
+    '''
+    This function is used to edit a package verification
+    '''
+    try:
+        package_verification = PackageVerification.objects.get(pk=id)
+    except PackageVerification.DoesNotExist:
+        # Handle the case where the PackageVerification does not exist
+        messages.error(request, 'Package verification does not exist.')
+        return redirect('/package/list-package-verification')
+
+    if request.method == 'POST':
+        package_verification.package = Package.objects.get(pk=request.POST.get('package'))
+        package_verification.authorizer = request.user
+        package_verification.status = request.POST.get('status')
+        package_verification.verification_remarks = request.POST.get('verification_remarks')
+        package_verification.save()
+        messages.success(request, 'Package verification edited successfully')
+        return redirect('/package/list-package-verification')
+    else:
+        return render(request, 'package/PackageVerification/edit-package-verification.html', {'package_verification': package_verification})
+
 

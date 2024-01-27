@@ -85,9 +85,11 @@
           <!--end::Dropdown-->
 
           <!--begin::Button-->
+          {% block aTag %}
           <a {% if not user.user_type|lower == 'Authorizer'|lower %} {% block linkOrModal %}{% endblock linkOrModal %} {% else %}
           data-toggle="tooltip" title="You don't have permission"
         {% endif %}  class="btn {% if not user.user_type|lower == 'Authorizer'|lower %} btn-primary {% else %} btn-warning {% endif %} font-weight-bolder ">
+        {% endblock aTag %}
               <span
                   class="svg-icon svg-icon-md"><!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
                   <svg
@@ -102,7 +104,9 @@
                               fill="#000000" opacity="0.3" />
                       </g>
                   </svg><!--end::Svg Icon-->
-                </span> {% if not user.user_type|lower == 'Authorizer'|lower %} New Record {% else %} Not Permission {% endif %}
+                </span> {% block actionText %}
+                {% if not user.user_type|lower == 'Authorizer'|lower %} New Record {% else %} Not Permission {% endif %}
+                {% endblock actionText %}
           </a>
           <!--end::Button-->
       </div>
@@ -129,7 +133,7 @@
 
 {% endblock pageContent %} {% block ScriptBlock %}
 <script>
-    $(document).ready(function(){
+    jQuery(document).ready(function(){
         $('#dms_datatable thead tr')
             .clone(true)
             .addClass('filters')
@@ -145,7 +149,7 @@
             autoWidth: true,
             bInfo: true,
             bSort: true,
-            order: [[0, "desc"]], // Disable order by of data table
+            // order: [[0, "desc"]], // Disable order by of data table
             scrollX: true,  // Enable the scroll horizontal
             orderCellsTop: true, // Put the filter A to Z and Z to A on TOP (first Thead)
             fixedHeader: true, // Force Thead Fixed 
@@ -252,7 +256,7 @@
         });
 
         // Initialize the search input from another file
-        $("#kt_quick_search_toggle").on("keyup", function () {
+        $("#quick_search").on("keyup", function () {
             table.search(this.value).draw();
         });
 

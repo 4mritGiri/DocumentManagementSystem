@@ -11,6 +11,7 @@
   <th>Compartment ID</th>
   <th>Compartment Name</th>
   <th>Compartment Location</th>
+  <th>Rack</th>
   <th>Actions</th>
 </tr>
 {% endblock tHead %} {% block tBody %} 
@@ -19,6 +20,7 @@
   <td>{{ compartment.compartment_id }}</td>
   <td>{{ compartment.compartment_name }}</td>
   <td>{{ compartment.compartment_location }}</td>
+  <td>{{ compartment.rack }}</td>
   <td nowrap>
     <a href="#" class="text-center m-1" title="View Branch">
       <i class="fas fa-eye fa-lg fa-fw text-success"></i>

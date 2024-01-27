@@ -21,10 +21,10 @@
     <!-- Name -->
     {% block valueName %} value="{{ rack.rack_name }}" {% endblock valueName %}
     
-    <!-- Rack -->
+    {% comment %} <!-- Rack -->
     {% block compartmentOption %} 
     <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ rack.compartment }} </option>
-    {% endblock compartmentOption %}
+    {% endblock compartmentOption %} {% endcomment %}
 
 
 <!-- Button Action -->

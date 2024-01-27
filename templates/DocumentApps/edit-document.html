@@ -18,10 +18,10 @@
     </div>
     {% endblock valueId %}
     
-    <!-- classificationOption -->
-    {% block classificationOption %} 
-    <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ document.doc_classification_type }} </option>
-    {% endblock classificationOption %}
+    <!-- docOption -->
+    {% block docOption %} 
+    <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ document.document }} </option>
+    {% endblock docOption %}
 
     <!-- docTypeOption -->
     {% block docTypeOption %} 
@@ -32,6 +32,28 @@
     {% block detailsOptions %}
     value={{ document.doc_details }}
     {% endblock detailsOptions %}
+
+    <!-- Voucher  -->
+    {% block voucherNoValue %}
+    value={{ document.voucher_no }}
+    {% endblock voucherNoValue %}
+
+    <!-- date_for_deposit -->
+    {% block valueDateForDeposit %}
+    value={{ document.date_for_deposit }}
+    {% endblock valueDateForDeposit %}
+
+    
+    <!-- user_for_deposit -->
+    {% block valueUserForDeposit %}
+    value={{ document.user_for_deposit }}
+    {% endblock valueUserForDeposit %}
+    
+    <!-- file_no -->
+    {% block valueClientFile %}
+    value={{ document.user_for_deposit }}
+    {% endblock valueClientFile %}
+
 
 
 <!-- Button Action -->

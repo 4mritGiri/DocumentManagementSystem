@@ -48,7 +48,7 @@
     <!--====== begin::Custom Page Styles ======-->
     <link rel="stylesheet" type="text/css" href="{% static "assets/css/style.css" %}" />
 
-    <link rel="icon" href="{{ MEDIA_URL }}/default/logo.png" />
+    <link rel="icon" href="{% static "assets/media/logos/logo.png" %}" />
 
 </head>
 <!--end::Head-->
@@ -80,8 +80,7 @@
                 <!--begin::Subheader-->
                 {% include "Header/subheader_menu.html" %}
                 <!--end::Subheader-->
-    {% comment %} {% include "main.html" %} {% endcomment %}
-                    {% comment %} {% include "demoPageContent.html" %} {% endcomment %}
+                {% comment %} {% include "demoPageContent.html" %} {% endcomment %}
              {% block pageContent %} {% endblock pageContent %}
 
              <!-- ===== Begin:: Modal =====-->
@@ -92,9 +91,13 @@
              {% include "package/Branch/create-branch.html" %}
              {% include "package/Rack/create-rack.html" %}
              {% include "package/create-package.html" %}
+             {% comment %} {% include "package/PackageVerification/package-verification.html" %} {% endcomment %}
 
              <!-- DocumentApps -->
              {% include "DocumentApps/add-document.html" %}
+
+             <!-- Package Collection -->
+             {% include "PackageCollection/create-package-collection.html" %}
 
              <!-- ===== End:: Modal =====-->
 
@@ -113,11 +116,7 @@
     
     {% include "userPanel.html" %}
 
-    {% include "quickCart.html" %}
-
     {% include "quickPanel.html" %}
-
-    {% include "chatPanel.html" %}
 
     {% include "scrollTop.html" %}
 
@@ -190,26 +189,31 @@
     <!--end::Global Config-->
     
     <!--begin::Global Theme Bundle(used by all pages)-->
+    
     <script src="{% static "assets/plugins/global/plugins.bundle.js" %}"></script>
     {% comment %} <script src="{% static "assets1/plugins/custom/prismjs/prismjs.bundle.js" %}"></script> {% endcomment %}
-
+    
     <script src="{% static "assets/js/scripts.bundle.js" %}"></script> <!-- Delete assets/js/scripts.bundle.min.js-->
     <!--end::Global Theme Bundle-->
-
+    
     <!--begin::Page Vendors(used by this page)-->
     {% comment %} <script src="{% static "assets1/plugins/custom/fullcalendar/fullcalendar.bundle.js" %}"></script> {% endcomment %}
     <!--end::Page Vendors-->
-
+    
     <!--begin::Page Scripts(used by this page)-->
     {% comment %} <script src="{% static "assets1/js/pages/widgets.js" %}"></script> {% endcomment %}
-    {% comment %} <script src="{% static 'assets/select2/dist/js/select2.full.js' %}"></script> {% endcomment %}
-    <!--end::Page Scripts-->
-
-    <!--begin::Page Vendors(datatables.bundle.js)-->
     
+    <script src="{% static "assets/js/jquery-3.6.0.min.js" %}"></script>
+    <script>
+        $.noConflict();
+    </script>
+    <script src="{% static "assets/plugins/global/bootstrap/bootstrap.bundle.min.js" %}"></script>
     <!--end::Page Scripts-->
+    
+    <!--begin::Page Vendors(datatables.bundle.js)-->
     <script src="{% static "assets/plugins/global/sweetalert2@11.js" %}"></script>
-
+    <script src="{% static "js/index.js" %}"></script>
+    
     {% for message in messages %}
     <script>
         Swal.fire({
@@ -218,12 +222,39 @@
             icon: "{{ message.tags }}",
             confirmButtonText: "Ok"
         });
+
     </script>
     {% endfor %}
 
-
 {% block ScriptBlock %} {% endblock ScriptBlock %}
 
+{{ room_name|json_script:"room-name" }}
+{% comment %} 
+<script>
+    document.getElementById("notification_data").innerHTML =
+  '<h1 class="text-center">No Notifications</h1>';  
+
+    const roomName = JSON.parse(document.getElementById("room-name").textContent);
+    
+    if (roomName) {
+        const notificationSocket = new WebSocket(
+            "ws://" + window.location.host + "/ws/notification/" + roomName + "/"
+            );
+    notificationSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        console.log(data);
+        // document.querySelector('#chat-log').value += (data.message + '\n');
+        const notificationMessageElement = document.getElementById("notification_data");
+    };
+
+    notificationSocket.onclose = function (e) {
+        console.error("Chat socket closed unexpectedly");
+    };
+    } else {
+    console.error("Invalid roomName:", roomName);
+    }
+
+</script> {% endcomment %}
 
 </body>
 <!--end::Body-->

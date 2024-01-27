@@ -7,7 +7,7 @@ urlpatterns = [
     # package urls
     path('create', createPackage, name='create-package'),
     path('list', packageList, name='list-package'),
-    # path('edit/<int:id>', editPackage, name='edit-package'),
+    path('edit/<int:id>', editPackage, name='edit-package'),
     path('delete/<int:id>', deletePackage, name='delete-package'),
 
     # Branch urls 
@@ -33,5 +33,11 @@ urlpatterns = [
     path('add-store-room', addStoreRoom, name='add-store-room'), # add store room
     path('store-room/<str:id>', storeRoom, name='store-room'), # show indivisual store room
     path('edit-store-room/<str:id>', editStoreRoom, name='edit-store-room'), # edit store room
-    path('delete-store-room/<str:id>', deleteStoreRoom, name='delete-store-room'), # delete store room
+    path('delete-store-room/<str:id>', deleteStoreRoom, name='delete-store-room'), # delete store 
+    
+    # Package Verification urls
+    path('list-package-verification', listPackageVerification, name='list-package-verification'), # list package verification
+    path('package-verification', packageVerification, name='package-verification'), # add package verification
+    path('edit-package-verification/<str:id>', editPackageVerification, name='edit-package-verification'), # edit package verification
+    path('delete-package-verification/<str:id>', deletePackageVerification, name='delete-package-verification'), # delete package verification
 ]

@@ -14,10 +14,7 @@
             </div>
 
             <span class="text-muted font-weight-bold mr-4">{{user.user_type}}</span>
-
-            <a href="#" class="btn btn-light-warning font-weight-bolder btn-sm">
-                Add New
-            </a>
+            
             <!--end::Actions-->
         </div>
         <!--end::Info-->
@@ -48,7 +45,7 @@
             <!--end::Daterange-->
 
             <!--begin::Dropdowns-->
-            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions"
+            {% comment %} <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions"
                 data-placement="left">
                 <a href="#" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
@@ -127,7 +124,7 @@
                     </ul>
                     <!--end::Navigation-->
                 </div>
-            </div>
+            </div> {% endcomment %}
             <!--end::Dropdowns-->
         </div>
         <!--end::Toolbar-->

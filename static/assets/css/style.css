@@ -13,9 +13,9 @@
 /* ============== DATATABLE ============== */
 
 /* ===== Searchbox ====== */
-/* .dataTables_filter {
+.dataTables_filter {
     display: none;
-} */
+}
 
 /* === Pagination === */
 
@@ -26,6 +26,7 @@
 /* ======= Show Entries ======= */
 .dataTables_length {
     margin-top: 10px !important;
+    display: inline-flex;
 }
 
 .dataTables_length select {
@@ -33,8 +34,14 @@
 }
 
 .dt-buttons {
-    margin-bottom: -50px !important;
+    margin-bottom: -6px !important;
 }
+
+div.dt-buttons {
+    position: absolute;
+    right: 0;
+}
+
 /* dt-buttons responsive design */
 @media screen and (max-width: 767px) {
     .dt-buttons {

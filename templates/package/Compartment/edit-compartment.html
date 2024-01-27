@@ -24,5 +24,10 @@
     <!-- Location -->
     {% block valueLocation %}value="{{ compartment.compartment_location }}"{% endblock valueLocation %}
 
+    <!-- RACK -->
+    {% block rackOption %} 
+    <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ compartment.rack }} </option>
+    {% endblock rackOption %}
+
 <!-- Button Action -->
 {% block btnAction %}<i class="fa fa-server" aria-hidden="true"></i>&nbsp; Save Changes {% endblock btnAction %}

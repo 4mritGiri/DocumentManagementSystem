@@ -22,7 +22,7 @@ data-toggle="modal" data-target="#addDocumentModal"
 {% for document in documents %}
 <tr>
   <td>{{ document.doc_id }}</td>
-  <td>{{ document.doc_classification_type }}</td>
+  <td>{{ document.document }}</td>
   <td>{{ document.doc_type }}</td>
   <td>{{ document.doc_details }}</td>
   <td nowrap>
@@ -41,7 +41,6 @@ data-toggle="modal" data-target="#addDocumentModal"
 
 <!-- Include -->
 {% include "DocumentApps/edit-document.html" %}
-
 
 <script>
   function deleteDocument(id, name) {

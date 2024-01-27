@@ -1,8 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from DocumentManagementSystem.settings import MEDIA_ROOT, MEDIA_URL
 import json
 from django.contrib import messages
 from dmsApp.forms import UserRegistration, SavePost, UpdateProfile, UpdatePasswords

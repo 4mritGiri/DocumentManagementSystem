@@ -28,7 +28,9 @@
                 <option value="{{ doc.doc_id }}">{{ doc }}</option>
                 {% endfor %}
             </select>
-              &nbsp;<span class="btn border-success bg-light" title="Add Document Type" data-toggle="modal" data-target="#addDocumentModal"><i class="fa fa-plus text-success" aria-hidden="true"></i></span>
+              &nbsp;<button class="btn border-success bg-light" onclick="newWindow()" title="Add Document Type" data-toggle="modal" data-target="#addDocumentModal">
+                <i class="fa fa-plus text-success" aria-hidden="true"></i>
+              </button>
             </div>
 
             <!-- packaging_size select -->
@@ -59,7 +61,7 @@
               </select>
             </div>
 
-            <!-- condition select -->
+            {% comment %} <!-- condition select -->
             <div class="input-group mb-3">
                 <span class="btn border-secondary bg-light side-label"><i class="fas fa-air-freshener    "></i></span>
                 <span class="text-danger require-dot" title="required">*</span>
@@ -71,7 +73,7 @@
                   <option value="{{ condition }}">{{ condition }}</option>
                   {% endfor %}
               </select>
-            </div>
+            </div> {% endcomment %}
 
             <!-- Package details -->
             <div class="input-group mb-3">
@@ -102,3 +104,15 @@
       </form>
     {% endblock modalBody %}
     
+    {% block ScriptBlock %}
+    <script>
+      function newWindow() {
+        var screenWidth = window.screen.width;
+        var screenHeight = window.screen.height;
+        var centerX = screenWidth / 2;
+        var centerY = (screenHeight - screenHeight / 2) / 2;
+        var win = window.open("/", "Add Document Type", "width=500,height=500,scrollbars=yes,left=" + centerX + ",top=" + centerY);
+        //  win.callback = callback;
+      }
+    </script>
+    {% endblock ScriptBlock %}

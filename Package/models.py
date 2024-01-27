@@ -5,13 +5,13 @@ print("Importing singlas...")
 from . import signals
 
 # Create your models here.
-CLASSIFICATION_TYPE_CHOICES = (
+DOCUMENT_TYPE_CHOICES = (
     ('Normal', 'Normal'),
     ('Classified', 'Classified'),
 )
 
 # Document type
-DOCUMENT_TYPE_CHOICES = (
+DOCUMENT_CHOICES = (
     ('Vouchers', 'Vouchers'),
     ('Cheques', 'Cheques'),
     ('Client File', 'Client File'),
@@ -22,12 +22,17 @@ DOCUMENT_TYPE_CHOICES = (
 
 class Document(models.Model):
     doc_id = models.AutoField(primary_key=True)
-    doc_classification_type = models.CharField(choices=CLASSIFICATION_TYPE_CHOICES, default='Normal', max_length=90)
-    doc_type = models.CharField(choices=DOCUMENT_TYPE_CHOICES, default='Vouchers', max_length=90)
-    doc_details = models.TextField()
+    document = models.CharField(choices=DOCUMENT_CHOICES, default='Vouchers', max_length=90)
+    doc_type = models.CharField(choices=DOCUMENT_TYPE_CHOICES, default='Normal', max_length=90)
+    doc_details = models.TextField(blank=True, null=True)
+    file_no = models.CharField(max_length=90, blank=True, null=True)
+    voucher_no = models.CharField(max_length=90, blank=True, null=True)
+    # cheque_no = models.CharField(max_length=90, blank=True, null=True)
+    user_for_deposit = models.CharField(max_length=90, blank=True, null=True)
+    date_for_deposit = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return f'{self.doc_id} - {self.doc_classification_type} - {self.doc_type} - {self.doc_details}'
+        return f'{self.document} - {self.doc_type} - {self.doc_details}'
 
 # Branch 
 class Branch(models.Model):
@@ -40,12 +45,13 @@ class Branch(models.Model):
         return f'{self.branch_id} - {self.branch_code} - {self.branch_name} - {self.branch_location}'
 
 
+
 # Compartment
 class Compartment(models.Model):
     compartment_id = models.AutoField(primary_key=True)
     compartment_name = models.CharField(max_length=90)
     compartment_location = models.CharField(max_length=150)
-
+    rack = models.ForeignKey('Rack', on_delete=models.CASCADE, related_name='compartments', null=True)
 
     def __str__(self):
         return f'{self.compartment_id} - {self.compartment_name} - {self.compartment_location}'
@@ -54,11 +60,10 @@ class Compartment(models.Model):
 class Rack(models.Model):
     rack_id = models.AutoField(primary_key=True)
     rack_name = models.CharField(max_length=90)
-    compartment = models.ForeignKey(Compartment, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.rack_id} - {self.rack_name} - {self.compartment}'
-    
+        return f'{self.rack_id} - {self.rack_name}'
+
 
 # Store
 class StoreRoom(models.Model):
@@ -113,7 +118,9 @@ class Package(models.Model):
     destruction_eligible_time = models.CharField(choices=DESTRUCTION_ELIGIBLE_TIME, default='1 Year', max_length=90)
     remarks = models.TextField(blank=True, null=True)
     condition = models.CharField(choices=CONDITION_CHOICES, default='Good', max_length=50)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='packages', null=True)
     is_sealed = models.BooleanField(default=False)
+    is_collected = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -141,7 +148,7 @@ class PackageVerification(models.Model):
     )
 
     verification_remarks = models.TextField()
-    verification_date = models.DateTimeField()
+    verification_date = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         # If the status is changed during verification, update the Package status
@@ -156,4 +163,30 @@ class PackageVerification(models.Model):
 
     class Meta:
         ordering = ['-verification_date']
+
+# Send notification when package is verified by authorizer to the user who created the package
+def send_verification_notification(sender, instance, created, **kwargs):
+    if kwargs['created']:
+        package = instance.package
+        user_to_notify = package.created_by
+
+        # Send notification to user_to_notify
+        print("Sending notification to user_to_notify")
+
+
+        try:
+            from notifications.models import BroadcastNotification
+            notification = BroadcastNotification.objects.create(
+                user=user_to_notify,
+                title='Package Verification',
+                message=f'Your package {package.pkg_name} has been {instance.status} by {instance.authorizer}.',
+                icon='fas fa-box fa-lg',
+                url=f'/package/{package.pkg_id}/',
+            )
+            notification.save()
+            print("Notification sent to user_to_notify")
+        except Exception as e:
+            print("Error sending notification to user_to_notify")
+            print(e)
+
 

@@ -1,4 +1,5 @@
 {% extends "modalBase.html" %}
+{% load static %}
 
 <!-- Modal For Create Document -->
 {% block modalId %} id="addDocumentModal" {% endblock modalId %}
@@ -11,40 +12,86 @@
   <div class="modal-body">
     {% block valueId %}{% endblock valueId %}
 
-    <!-- Classification Type select -->
-    <div class="input-group mb-3">
-      <span class="btn border-secondary bg-light side-label"><i class="fa fa-server" aria-hidden="true"></i></span>
-      <span class="text-danger require-dot" title="required">*</span>
-      <select name="doc_classification_type" class="form-control" required>
-        {% block classificationOption %}
-        <option value="" hidden>Select Classification Type</option>
-        {% endblock classificationOption %}
-        {% for classification, _ in doc_classification_type %}
-          <option value="{{ classification }}">{{ classification }}</option>
-        {% endfor %}
-      </select>
-    </div>
+      <!-- Document Type select -->
+      <div class="input-group mb-3">
+        <span class="btn border-secondary bg-light side-label">
+          <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </span>
+        <span class="text-danger require-dot" title="required">*</span>
+        <select name="doc_type" id="document_type" class="form-control" required>
+          {% block docTypeOption %}
+          <option value="" hidden>Select Document Type</option>
+          {% endblock docTypeOption %}
+          {% for doc_type, _ in doc_type %}
+            <option value="{{ doc_type }}">{{ doc_type }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <!-- Document Type select -->
+    <!-- Document select -->
     <div class="input-group mb-3">
-      <span class="btn border-secondary bg-light side-label"><i class="fa fa-server" aria-hidden="true"></i></span>
+      <span class="btn border-secondary bg-light side-label">
+        <i class="fa fa-file-text" aria-hidden="true"></i>
+      </span>
       <span class="text-danger require-dot" title="required">*</span>
-      <select name="doc_type" class="form-control" required>
-        {% block docTypeOption %}
-        <option value="" hidden>Select Document Type</option>
-        {% endblock docTypeOption %}
-        {% for doc_type, _ in doc_type %}
-          <option value="{{ doc_type }}">{{ doc_type }}</option>
+      <select name="document" id="select_document" class="form-control" required>
+        {% block docOption %}
+        <option value="" hidden>Select Document</option>
+        {% endblock docOption %}
+        {% for doc, _ in document_select %}
+          <option value="{{ doc }}">{{ doc }}</option>
         {% endfor %}
       </select>
     </div>
 
     <!-- Document Details -->
-    <div class="input-group mb-3">
-      <span class="btn border-secondary bg-light side-label"><i class="fa fa-server" aria-hidden="true"></i></span>
+    <div class="input-group mb-3" id="common_details">
+      <span class="btn border-secondary bg-light side-label">
+        <i class="fas fa-info    "></i>
+      </span>
       <span class="text-danger require-dot" title="required">*</span>
-      <input type="text" name="doc_details" class="form-control" maxlength="255" placeholder="Document Details*" {% block detailsOptions %}{% endblock detailsOptions %} required />
+      <input type="text" name="doc_details" class="form-control" maxlength="255" placeholder="Document Details*" {% block detailsOptions %}{% endblock detailsOptions %} />
     </div>
+
+    <!-- Vouchers Details Section -->
+    <div id="vouchers_details" class="vouchers-details">
+    <!-- Voucher Number -->
+     <div class="input-group mb-3" id="voucher_details">
+      <span class="btn border-secondary bg-light side-label">
+        <i class="fas fa-sort-numeric-down"></i>
+      </span>
+      <span class="text-danger require-dot" title="required">*</span>
+      <input type="text" name="voucher_no" class="form-control" maxlength="255" placeholder="Voucher Number" {% block voucherNoValue %}{% endblock voucherNoValue %} />
+    </div>
+
+     <!-- Date for Deposit Voucher -->
+     <div class="input-group mb-3" id="date_for_deposit_details">
+      <span class="btn border-secondary bg-light side-label">
+        <i class="fas fa-calendar-alt"></i>
+      </span>
+      <span class="text-danger require-dot" title="required">*</span>
+      <input type="date" name="date_for_deposit" class="form-control" maxlength="255" placeholder="Date for Deposit Voucher" {% block valueDateForDeposit %}{% endblock valueDateForDeposit %} />
+    </div>
+
+     <!-- User for Deposit Voucher -->
+     <div class="input-group mb-3" id="user_for_deposit_details">
+      <span class="btn border-secondary bg-light side-label">
+        <i class="fas fa-user    "></i>
+      </span>
+      <span class="text-danger require-dot" title="required">*</span>
+      <input type="text" name="user_for_deposit" class="form-control" maxlength="255" placeholder="User for Deposit Voucher" {% block valueUserForDeposit %}{% endblock valueUserForDeposit %} />
+    </div>
+  </div>
+
+  <!-- Client File Details Section -->
+  <div class="input-group mb-3" id="client_file_details">
+    <span class="btn border-secondary bg-light side-label">
+      <i class="fas fa-file    "></i>
+    </span>
+    <span class="text-danger require-dot" title="required">*</span>
+    <input type="text" name="file_no" class="form-control" maxlength="255" placeholder="File Number" {% block valueClientFile %}{% endblock valueClientFile %} />
+  </div>
+
 
     <div class="mt-4 d-flex justify-content-end" style="width: 100%">
       <button type="submit" class="btn btn-success mb-3">
@@ -62,6 +109,60 @@
         <i class="fa fa-times" aria-hidden="true"></i>&nbsp;
       </button>
     </div>
-  </div>
-</form>
+    </div>
+    </form>
+
+   
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    var documentTypeSelect = document.getElementById("select_document");
+    var documentDetailsSections = document.querySelectorAll(".vouchers-details");
+
+    documentTypeSelect.addEventListener("change", function () {
+      // Hide all document details sections initially
+      documentDetailsSections.forEach(function (section) {
+        section.style.display = "none";
+      });
+
+      // Get the selected document type
+      var selectedDocumentType = documentTypeSelect.value.toLowerCase().replace(' ', '_');
+      var selectedDocumentDetailsSection = document.querySelector("." + selectedDocumentType + "-details");
+
+      // Show the selected document details section
+      if (selectedDocumentDetailsSection) {
+        selectedDocumentDetailsSection.style.display = "block";
+      }
+
+      // Handle common details based on the selected document type
+      var commonDetailsSection = document.getElementById("common_details");
+
+      if (commonDetailsSection) {
+        // Show the common details section for Cheques, Demand Drafts, Contracts, Guarantees
+        if (["cheques", "demand_draft", "contracts", "guarantee"].includes(selectedDocumentType)) {
+          commonDetailsSection.style.display = "";
+        } else {
+          // Hide the common details section for other document types
+          commonDetailsSection.style.display = "none";
+        }
+      }
+
+      // Show/hide the "File Number" section based on the document type
+      var clientFileDetailsSection = document.getElementById("client_file_details");
+
+      if (clientFileDetailsSection) {
+        // Show the "File Number" section for the "Client File" document type
+        clientFileDetailsSection.style.display = selectedDocumentType === "client_file" ? "" : "none";
+
+      }
+      
+    });
+
+    // Trigger the change event initially to set the initial state
+    var initialEvent = new Event('change');
+    documentTypeSelect.dispatchEvent(initialEvent);
+  });
+
+  </script>
+  
 {% endblock modalBody %}
+

@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Package
+from .models import StoreMonitoring
 
 @login_required(login_url='login')
 def qr_scanner(request):
@@ -84,3 +85,36 @@ def update_condition(request):
             return redirect('list-package')
         
     return redirect('qr-scanner')
+
+
+# *****************
+# Store Monitoring
+# *****************
+
+# Function to list all StoreMonitoring
+@login_required(login_url='login')
+def listStoreMonitoring(request):
+    store_monitoring = StoreMonitoring.objects.all()
+    return render(request, 'ScheduledMonitoring/StoreMonitoring/list_store_monitoring.html', {'store_monitoring': store_monitoring})
+
+
+# Function to Store Monitoring
+@login_required(login_url='login')
+def addStoreMonitoring(request):
+    if request.method == 'POST':
+        store_room = request.POST.get('store_room')
+        scheduled_date = request.POST.get('scheduled_date')
+        comments = request.POST.get('comments')
+
+        try:
+            store_monitoring = StoreMonitoring(store_room=store_room, scheduled_date=scheduled_date, comments=comments)
+            store_monitoring.save()
+            messages.success(request, 'Store Monitoring added successfully.')
+            return redirect('list-store-monitoring')
+
+        except ValueError:
+            messages.error(request, 'Invalid data.')
+            return redirect('list-store-monitoring')
+
+    return render(request, 'ScheduledMonitoring/StoreMonitoring/add_store_monitoring.html')
+

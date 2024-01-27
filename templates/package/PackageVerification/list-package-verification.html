@@ -1,0 +1,91 @@
+{% extends 'package/table.html' %} 
+{% block title %}Package Verification List{% endblock title %}
+{% block tableTitle %}
+ Package Verification List
+{% endblock tableTitle %}
+
+{% block aTag %}
+{% comment %} <a data-toggle="modal" data-target="#addPackageVerificationModal" class="btn {% if user.user_type|lower == 'Authorizer'|lower %} btn-primary {% else %} btn-warning {% endif %} font-weight-bolder " title="Add Package Verification"> {% endcomment %}
+{% endblock aTag %}
+{% block actionText %}{% endblock actionText %}
+
+{% block tHead %}
+<tr>
+  <th>Package</th>
+  <th>Authorizer</th>
+  <th>Status</th>
+  <th>Verification Remarks</th>
+  <th>Verification Date</th>
+  <th>Actions</th>
+</tr>
+{% endblock tHead %} {% block tBody %} 
+{% for package_verification in package_verifications %}
+<tr>
+  <td>{{ package_verification.package }}</td>
+  <td>{{ package_verification.authorizer }}</td>
+  <td>{{ package_verification.status }}</td>
+  <td>{{ package_verification.verification_remarks }}</td>
+  <td>{{ package_verification.verification_date | date:'m/d/Y (H:i)'}}</td>
+  <td nowrap>
+    <a href="#" class="text-center m-1" title="View">
+      <i class="fas fa-eye fa-lg fa-fw text-success"></i>
+    </a>
+    <a href="" class="text-center m-1" title="Edit Package Verification" data-toggle="modal" data-target="#editPackageVerificationModal{{ package_verification.pk }}">
+      <i class="fas fa-edit fa-lg fa-fw text-primary"></i>
+    </a>
+    {% comment %} <a href="#" class="text-center m-1" title="Delete Package Verification" onclick="deletePackageVerification('{{ package_verification.pk }}', '{{ package_verification }}')">
+      <i class="fas fa-trash-alt text-danger"></i> 
+    </a>  {% endcomment %}
+  </td>
+</tr>
+
+<!-- Include -->
+{% include "package/PackageVerification/edit-package-verification.html" %}
+
+
+<script>
+  function deletePackageVerification(id, name) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+      title: "DO YOU WANT TO DELETE THIS PACKAGE ???",
+      text: "Package: " + name,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send AJAX request to delete the package
+        $.ajax({
+          url: `/package/delete-package-verification/${id}`,
+          success: function (data) {
+            swalWithBootstrapButtons.fire({
+              title: "Deleted!",
+              text: `Package: ${name} has been deleted.`,
+              icon: "success"
+            }).then(() => {
+              // Reload the page or update the table after successful deletion
+              location.reload();
+            });
+          },
+          error: function (error) {
+            swalWithBootstrapButtons.fire({
+              title: "Error",
+              text: "Failed to delete package.",
+              icon: "error"
+            });
+          }
+        });
+      }
+    });
+  }
+</script>
+{% endfor %} {% endblock tBody %}

@@ -17,25 +17,26 @@ def addDocument(request):
     This function is used to add a document
     '''
     if request.method == 'POST':
-        doc_classification_type = request.POST.get('doc_classification_type')
-        doc_type = request.POST.get('doc_type')
-        doc_details = request.POST.get('doc_details')
-
-        # Validate form data
-        if not doc_classification_type or not doc_type or not doc_details:
-            messages.error(request, 'All fields are required.')
-            return render(request, 'DocumentApps/add-document.html')
-
-        # Create and save Document instance
-        document = Document(
-            doc_classification_type=doc_classification_type,
-            doc_type=doc_type,
-            doc_details=doc_details
-        )
-        document.save()
-
-        messages.success(request, 'Document added successfully')
-        return redirect('/document/list-document')
+        if (
+            request.POST.get('document') and
+            request.POST.get('doc_type') and
+            request.POST.get('doc_details') or
+            request.POST.get('file_no') or
+            request.POST.get('voucher_no') or
+            request.POST.get('user_for_deposit') or
+            request.POST.get('date_for_deposit')
+        ):
+            document = Document()
+            document.document = request.POST.get('document')
+            document.doc_type = request.POST.get('doc_type')
+            document.doc_details = request.POST.get('doc_details')
+            document.file_no = request.POST.get('file_no')
+            document.voucher_no = request.POST.get('voucher_no')
+            document.user_for_deposit = request.POST.get('user_for_deposit')
+            document.date_for_deposit = request.POST.get('date_for_deposit')
+            document.save()
+            messages.success(request, 'Document added successfully')
+            return redirect('/document/list-document')
     else:
         return render(request, 'DocumentApps/add-document.html')
     

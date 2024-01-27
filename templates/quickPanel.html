@@ -39,7 +39,7 @@
                     <div class="d-flex align-items-center flex-wrap mb-5">
                         <div class="symbol symbol-50 symbol-light mr-5">
                             <span class="symbol-label" title="{{log.document_access.document_request.requester}} want to access {{log.document_access.document_request.package }} .">
-                                <img src="{{ MEDIA_URL }}/{{ log.document_access.document_request.requester.profile_picture }}" class="h-50 align-self-center"
+                                <img src="{{ MEDIA_URL }}{{ log.document_access.document_request.requester.profile_picture }}" class="h-50 align-self-center"
                                     alt="{{ log.document_access.document_request.requester }}" />
                             </span>
                         </div>

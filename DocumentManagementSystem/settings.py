@@ -21,7 +21,9 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # 'channels',
     'jazzmin',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,9 +39,11 @@ INSTALLED_APPS = [
     'ScheduledMonitoring.apps.ScheduledmonitoringConfig', 
     'DocumentApps.apps.DocumentappsConfig',
     'dashboard.apps.DashboardConfig',
+    'notifications.apps.NotificationsConfig',
 
-
-    'channels',
+    # for beat schedule
+    'django_celery_beat', 
+    'django_celery_results',
 ]
 
 JAZZMIN_SETTINGS = {
@@ -57,10 +61,10 @@ JAZZMIN_SETTINGS = {
     "site_logo": "../media/default/logo.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "static/assets/media/logos/dmss.png",
+    "login_logo": "assets/media/logos/dmss.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
-    "login_logo_dark": "static/assets/media/logos/dmss.png",
+    "login_logo_dark": "assets/media/logos/dmss.png",
 
     # CSS classes that are applied to the logo above
     "site_logo_classes": "img-circle",
@@ -242,6 +246,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
                 'Package.global_context.global_context',
+                'notifications.notifications_context.notifications_context',
             ],
         },
     },
@@ -257,7 +262,7 @@ ASGI_APPLICATION = 'DocumentManagementSystem.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'dba.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -296,17 +301,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-
-STATIC_URL = 'static/'
-# STATICFILES_DIRS = [ 
-#     BASE_DIR / "static",
-#     ]
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-#MEDIA
-MEDIA_URL = 'media/'
-# MEDIA_ROOT = BASE_DIR / "media/"
+# Media files (uploads, user uploads, etc.)
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -322,3 +324,50 @@ ID_ENCRYPTION_KEY = b'UdhnfelTxqj3q6BbPe7H86sfQnboSBzb0irm2atoFUw='
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTH_USER_MODEL = 'dmsApp.CustomUser'
+
+
+    # ***********************************
+    # * DJANGO-CHANELS STUFF (Settings) *
+    # ***********************************
+# ======================= CHANNEL_LAYERS =============================== 
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+    # *********************
+    # * CELERY (Settings) *
+    # *********************
+# ============================= CELERY STUFF =============================
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+# CELERY_BEAT_SCHEDULE = {
+#     'scheduled_monitoring': {
+#         'task': 'ScheduledMonitoring.tasks.scheduled_monitoring',
+#         'schedule': 60.0,
+#     },
+# }
+
+# # celery setting.
+# CELERY_CACHE_BACKEND = 'default'
+
+# # django setting.
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
+

@@ -15,13 +15,12 @@ urlpatterns = [
     path("package/", include("Package.urls")),
     path("document/", include("DocumentApps.urls")),
     path("scheduled-monitoring/", include("ScheduledMonitoring.urls")),
-    # path("package-collection/", include("PackageCollection.urls")),
-    # path("destruction-eligible/", include("DestructionEligible.urls")),
-    
-]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    path("collection/", include("PackageCollection.urls")),
+    path("destruction-eligible/", include("DestructionEligible.urls")),
+    path("notifications/", include("notifications.urls")),
+]
 
 # Add static and media file serving during development
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

@@ -21,21 +21,20 @@ class UserRegistration(UserCreationForm):
         # Add more fields here
 
     def clean_email(self):
-        email = self.clean_data['email'].lower() # type: ignore
+        email = self.cleaned_data['email'].lower()
         try:
             user = User.objects.get(email=email)
-        except Exception as e:
+        except User.DoesNotExist:
             return email
-        raise forms.ValidationError(f"Email {user.email} mail is already exists/taken.")
-        
+        raise forms.ValidationError(f"Email {user.email} is already taken.")
+
     def clean_username(self):
-        username = self.clean_data['username'].lower() # type: ignore
+        username = self.cleaned_data['username'].lower()
         try:
             user = User.objects.get(username=username)
-        except Exception as e:
+        except User.DoesNotExist:
             return username
-        raise forms.ValidationError(f"Username {user.username} is already exists/taken.")
-        
+        raise forms.ValidationError(f"Username {user.username} is already taken.")    
 
 
 class UpdateProfile(UserChangeForm):

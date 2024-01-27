@@ -296,7 +296,7 @@
                                 </a>
                             </li>
                             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                                <a href="javascript:;" class="menu-link menu-toggle">
+                                <a href="{% url "list-package-verification" %}" class="menu-link menu-toggle">
                                     <i class="menu-bullet menu-bullet-line"><span></span></i>
                                     <span class="menu-text">View Verified Package</span>
                                     <span class="menu-label"></span>
@@ -329,14 +329,14 @@
                                 <span class="menu-link"><span class="menu-text">Package Collections</span></span>
                             </li>
                             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                                <a href="javascript:;" class="menu-link menu-toggle">
+                                <a data-toggle="modal" data-target="#addPackageCollectionModal" class="menu-link menu-toggle">
                                     <i class="menu-bullet menu-bullet-line"><span></span></i>
                                     <span class="menu-text">Package Collection</span>
                                     <span class="menu-label"></span>
                                 </a>
                             </li>
                             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                                <a href="javascript:;" class="menu-link menu-toggle">
+                                <a href="{% url "list-package-collection" %}" class="menu-link menu-toggle">
                                     <i class="menu-bullet menu-bullet-line"><span></span></i>
                                     <span class="menu-text">View Collected Package</span>
                                     <span class="menu-label"></span>
@@ -530,7 +530,7 @@
                                 <span class="menu-link"><span class="menu-text">Destruction Eligible Document</span></span>
                             </li>
                             <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-                                <a href="javascript:;" class="menu-link menu-toggle">
+                                <a href="{% url "list-destruction-eligible" %}"  class="menu-link menu-toggle">
                                     <i class="menu-bullet menu-bullet-line"><span></span></i>
                                     <span class="menu-text">Destruction Eligible Document List</span>
                                     <span class="menu-label"></span>

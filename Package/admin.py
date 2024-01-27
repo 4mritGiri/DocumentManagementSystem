@@ -4,17 +4,17 @@ from django.contrib import admin
 from .models import Document, StoreRoom, Compartment, Package, Branch, PackageVerification, Rack
 from django.utils.html import mark_safe # type: ignore
 from .utils import generate_qr
-
+# doc_classification_type
 # Register your models here.
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ('doc_type', 'doc_id', 'doc_classification_type', 'doc_details')
-    list_filter = ('doc_classification_type', 'doc_type')
-    search_fields = ('doc_id', 'doc_classification_type', 'doc_type', 'doc_details')
+    list_display = ('document', 'doc_type', 'doc_details', 'file_no', 'voucher_no', 'user_for_deposit', 'date_for_deposit')
+    list_filter = ('doc_type', 'document')
+    search_fields = ('doc_id', 'doc_type', 'document', 'doc_details')
 
     fieldsets = (
         ('Document', {
-            'fields': ('doc_type', 'doc_classification_type')
+            'fields': ('document', 'doc_type')
         }),
         (
             'Document Details', {
@@ -40,13 +40,13 @@ class BranchAdmin(admin.ModelAdmin):
 # Compartment
 @admin.register(Compartment)
 class CompartmentAdmin(admin.ModelAdmin):
-    list_display = ('compartment_name', 'compartment_id', 'compartment_location')
+    list_display = ('compartment_name', 'compartment_id', 'compartment_location', 'rack')
     list_filter = ('compartment_name', 'compartment_location')
     search_fields = ('compartment_id', 'compartment_name', 'compartment_location')
 
     fieldsets = (
         ('Compartment', {
-            'fields': ('compartment_name', 'compartment_location')
+            'fields': ('compartment_name', 'compartment_location', 'rack')
         }),
     )
 
@@ -81,7 +81,7 @@ class StoreRoomAdmin(admin.ModelAdmin):
 # Rack
 @admin.register(Rack)
 class RackAdmin(admin.ModelAdmin):
-    list_display = ('rack_name', 'rack_id', 'rack_location')
+    list_display = ('rack_name', 'rack_id')
     list_filter = ('rack_name', 'rack_id')
     search_fields = ('rack_id', 'rack_name')
 
@@ -91,14 +91,14 @@ class RackAdmin(admin.ModelAdmin):
     def rack_id(self, obj):
         return obj.rack_id
     
-    def rack_location(self, obj):
-        return obj.compartment.compartment_name + ', ' + obj.compartment.compartment_location
+    # def rack_location(self, obj):
+    #     return obj.compartment.compartment_name + ', ' + obj.compartment.compartment_location
     
-    fieldsets = (
-        ('Rack', {
-            'fields': ('rack_name', 'compartment')
-        }),
-    )
+    # fieldsets = (
+    #     ('Rack', {
+    #         'fields': ('rack_name', 'compartment')
+    #     }),
+    # )
 
 # Register your models here.
 @admin.register(Package)
@@ -106,7 +106,7 @@ class PackageAdmin(admin.ModelAdmin):
     list_display = ('pkg_name', 'document', 'details', 'packaging_size', 'status', 'destruction_eligible_time', 'qr_code','condition', 'is_sealed', 'created_at', 'updated_at', 'remarks')
 
     def document(self, obj):
-        return obj.document_type.doc_type
+        return obj.document_type.document
     
     def qr_code(self, obj):
         # Generate QR code and get the path
@@ -115,7 +115,7 @@ class PackageAdmin(admin.ModelAdmin):
         data = {
             "PackageID": obj.pkg_id,
             "PackageName": obj.pkg_name,
-            "DocumentType": obj.document_type.doc_type,
+            "DocumentType": obj.document_type.document,
             "Details": obj.details,
             "PackagingSize": obj.packaging_size,
             "Status": obj.status,
@@ -179,7 +179,7 @@ class PackageAdmin(admin.ModelAdmin):
                                             </tr>
                                             <tr>
                                                 <th>Document Type :</th>
-                                                <td>{obj.document_type.doc_type}</td>
+                                                <td>{obj.document_type.document}</td>
                                             </tr>
                                             <tr>
                                                 <th>Details :</th>
@@ -241,7 +241,7 @@ class PackageAdmin(admin.ModelAdmin):
         ),
         (
             'QR Code', {
-                'fields': ('is_sealed', 'condition','qr_code',),
+                'fields': ('is_sealed', 'condition', 'created_by','qr_code',),
                 'classes': ('collapse',)
             }
         )
@@ -268,10 +268,10 @@ class PackageVerificationAdmin(admin.ModelAdmin):
         }),
         (
             'Package Verification Status', {
-                'fields': ('status', 'verification_date'),
+                'fields': ('status',),
                 # 'classes': ('collapse',)
             }
         )
     )
-    
+
     

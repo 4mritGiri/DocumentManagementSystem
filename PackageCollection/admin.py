@@ -5,9 +5,9 @@ from Package.admin import PackageAdmin
 
 @admin.register(PackageCollection)
 class PackageCollectionAdmin(admin.ModelAdmin):
-    list_display = ('package', 'collector', 'collection_date', 'tampering_verification_remarks', 'store_location', 'is_tampered', 'is_verified', 'display_qr_code')
-    list_filter = ('package', 'collector', 'collection_date', 'store_location', 'is_tampered', 'is_verified')
-    search_fields = ('package', 'collector', 'collection_date', 'store_location', 'is_tampered', 'is_verified')
+    list_display = ('package', 'collector', 'collection_date', 'tampering_verification_remarks', 'store_location', 'tampering_detected', 'is_verified', 'display_qr_code')
+    list_filter = ('package', 'collector', 'collection_date', 'store_location', 'tampering_detected', 'is_verified')
+    search_fields = ('package', 'collector', 'collection_date', 'store_location', 'tampering_detected', 'is_verified')
 
     def package(self, obj):
         return obj.package.pkg_name
@@ -31,7 +31,7 @@ class PackageCollectionAdmin(admin.ModelAdmin):
         }),
          (
             'Package Collection Status', {
-                'fields': ('tampering_verification_remarks', 'is_tampered', 'is_verified'),
+                'fields': ('tampering_verification_remarks', 'tampering_detected', 'is_verified'),
                 # 'classes': ('collapse',) 
             }
         )
