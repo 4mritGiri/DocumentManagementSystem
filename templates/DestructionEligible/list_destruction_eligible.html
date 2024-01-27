@@ -1,86 +1,72 @@
-{% extends 'package/table.html' %} 
+{% extends 'package/table.html' %}
+
+{% load custom_filters %}
+
 {% block title %}Destruction Eligible{% endblock title %}
 {% block tableTitle %}
-<i class="fas fa-trash-alt fa-fw"></i>
- Destruction Eligible
+<i class="fas fa-trash-alt fa-fw text-danger"></i>
+Destruction Eligible
 {% endblock tableTitle %}
 
-{% block linkOrModal %} data-toggle="modal" data-target="#addDestructionEligibleModal"{% endblock linkOrModal %}
+{% block buttonBlock %}{% endblock buttonBlock %}
+{% block exportBlock %}{% endblock exportBlock %}
+
 {% block tHead %}
 <tr>
-  <th>Package Name</th>
+  <th>ID</th>
+  <th>Related Package</th>
   <th>Is Expired</th>
   <th>Created At</th>
   <th>Destruction Time</th>
-  <th>Actions</th>
+  <th>Expired Time</th>
 </tr>
-{% endblock tHead %} {% block tBody %} 
+{% endblock tHead %} {% block tBody %}
 {% for destruction_eligible in destruction_eligibles %}
 <tr>
-  <td>{{ destruction_eligible.package }}</td>
-  <td>{{ destruction_eligible.is_expired }}</td>
-  <td>{{ destruction_eligible.created_at | date:'m/d/Y (H:i)' }}</td>
-  <td>{{ destruction_eligible.destruction_time | date:'m/d/Y (H:i)' }}</td>
-  <td nowrap>
-    <a href="#" class="text-center m-1" title="View">
-      <i class="fas fa-eye fa-lg fa-fw text-success"></i>
-    </a>
-    {% if user.user_type|lower == "Admin"|lower %}
-        <a href="" class="text-center m-1" title="Edit Package" data-toggle="modal" data-target="#editDestructionEligibleModal{{ package.pk }}">
-          <i class="fas fa-edit fa-lg fa-fw text-primary"></i>
-        </a>
+    <td>{{destruction_eligible.pk }} </td>
+  <td>{{ destruction_eligible.related_package }}</td>
+  <td>
+    <p hidden>{{destruction_eligible.is_expired}}</p>
+    {% if destruction_eligible.is_expired %}
+      <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+    {% else %}
+      <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
     {% endif %}
-    <a href="#" class="text-center m-1" title="Delete package" onclick="deletePackage('{{ package.pkg_id }}', '{{ package }}')">
-      <i class="fas fa-trash-alt text-danger"></i> 
-    </a> 
   </td>
+  <td>{{ destruction_eligible.created_at | date:'D M d Y P' }}</td>
+  <td>{{ destruction_eligible.destruction_time | format_date_time }}</td>
+  <td class="expired_time" id="expired_time_{{ destruction_eligible.pk }}"></td>
 </tr>
 
 <!-- Include -->
 
 <script>
-  function deletePackage(id, name) {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
-      },
-      buttonsStyling: false
-    });
+  (function () {
+    // Assuming destruction_time is in seconds
+    const destructionTimeInSeconds = {{ destruction_eligible.destruction_time }};
+    const destructionTimeInMilliseconds = destructionTimeInSeconds * 1000;
 
-    swalWithBootstrapButtons.fire({
-      title: "DO YOU WANT TO DELETE THIS PACKAGE ???",
-      text: "Package: " + name,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel!",
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Send AJAX request to delete the package
-        $.ajax({
-          url: `/package/delete/${id}`,
-          success: function (data) {
-            swalWithBootstrapButtons.fire({
-              title: "Deleted!",
-              text: `Package: ${name} has been deleted.`,
-              icon: "success"
-            }).then(() => {
-              // Reload the page or update the table after successful deletion
-              location.reload();
-            });
-          },
-          error: function (error) {
-            swalWithBootstrapButtons.fire({
-              title: "Error",
-              text: "Failed to delete package.",
-              icon: "error"
-            });
-          }
-        });
-      }
-    });
-  }
+    console.log(new Date())
+    const valueFromBackend = "{{destruction_eligible.created_at | date:'D M d Y H:i:s '}}";
+    console.log(valueFromBackend)
+    const createdDate = new Date(valueFromBackend);
+    const createdAtInMilliseconds = createdDate.getTime();
+    // created at time Sat Jan 27 2024 21:18:16 GMT+0545 (Nepal Time)
+
+    // Current date in milliseconds
+    const currentTimeInMilliseconds = new Date().getTime();
+
+    // Calculate the time remaining until destruction
+    const timeRemainingInMilliseconds = (destructionTimeInMilliseconds + createdAtInMilliseconds ) - currentTimeInMilliseconds;
+
+    // Convert the time remaining to a readable format
+    const daysRemaining = Math.floor(timeRemainingInMilliseconds / (1000 * 60 * 60 * 24));
+    const hoursRemaining = Math.floor((timeRemainingInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutesRemaining = Math.floor((timeRemainingInMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+
+    // Display the remaining time
+    const expiredTimeElement = document.getElementById("expired_time_{{ destruction_eligible.pk }}");
+    expiredTimeElement.textContent = (`${daysRemaining} days, ${hoursRemaining} hours, ${minutesRemaining} minutes`);
+  })();
 </script>
 {% endfor %} {% endblock tBody %}
