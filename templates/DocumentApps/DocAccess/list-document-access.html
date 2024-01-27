@@ -1,0 +1,11 @@
+<!-- document_access_list.html -->
+{% extends 'base.html' %}
+
+{% block pageContent %}
+  <h2>Document Accesses</h2>
+  <ul>
+    {% for access in document_accesses %}
+      <li>{{ access.document_request.requester }} was provided {{ access.access_type }} on {{ access.document_request.request_date }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

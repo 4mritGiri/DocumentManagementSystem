@@ -1,0 +1,64 @@
+{% extends "modalBase.html" %}
+
+ <!-- Modal -->
+{% block modalId %} id="addModal" {% endblock modalId %}
+
+{% block modalTitle %} <i class="fas fa-plus"></i>&nbsp; Add Store Room{% endblock modalTitle %}
+
+{% block modalBody %}
+      <form method="POST" {% block formAction %} action="{% url 'add-store-room' %}" {% endblock formAction %}>
+        {% csrf_token %}
+        <div class="modal-body">
+            {% block valueId %}{% endblock valueId %}
+
+            <div class="input-group mb-3">
+              <span class="btn border-secondary bg-light side-label"><i class="fas fa-user-alt"></i></span><span class="text-danger require-dot" title="required">*</span>
+                <input type="text" name="store_room_name" id="store_room_name" class="form-control" maxlength="60" placeholder="Store room name*" {% block valueName %}{% endblock valueName %} required>
+            </div>
+
+            <!-- Rack select -->
+            <div class="input-group mb-3">
+              <span class="btn border-secondary bg-light side-label"><i class="fa fa-server" aria-hidden="true"></i></span>
+              <span class="text-danger require-dot" title="required">*</span>
+              <select name="rack" class="form-control" required>
+                {% block rackOption %}
+                <option value="" hidden>Select Rack</option>
+                {% endblock rackOption %}
+                {% for rack in racks %}
+                <option value="{{ rack.rack_id }}">{{ rack.rack_name }}</option>
+                {% endfor %}
+            </select>
+              &nbsp;<span class="btn border-success bg-light" title="Add Rack"><i class="fa fa-plus text-success" aria-hidden="true"></i></span>
+            </div>
+
+            <!-- Branch select -->
+            <div class="input-group mb-3">
+              <span class="btn border-secondary bg-light side-label"><i class="fas fa-code-branch"></i></span>
+              <span class="text-danger require-dot" title="required">*</span>
+              <select name="branch" class="form-control" required>
+                {% block branchOption %}
+                <option value="" hidden>Select Branch</option>
+                {% endblock branchOption %}
+                {% for branch in branches %}
+                    <option value="{{ branch.branch_id }}">{{ branch.branch_name }}</option>
+                {% endfor %}
+            </select>
+              &nbsp;<span class="btn border-success bg-light" title="Add Branch"><i class="fa fa-plus text-success" aria-hidden="true"></i></span>
+            </div>
+            
+            <div class="mt-4 d-flex justify-content-end" style="width: 100%;">
+              <button type="submit" class="btn btn-success mb-3">
+                    {% block btnAction %}<i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Add Store Room{% endblock btnAction %}
+                </button>
+                <button type="reset" class="btn btn-outline-dark mb-3 ml-2" title="Reset">
+                    <i class="fa fa-sync-alt" aria-hidden="true"></i>&nbsp;
+                </button>
+                <button type="button" data-dismiss="modal" class="btn btn-outline-danger mb-3 ml-2" title="Close">
+                  <i class="fa fa-times" aria-hidden="true"></i>&nbsp;
+                </button>
+            </div>
+            
+        </div>
+      </form>
+    {% endblock modalBody %}
+    

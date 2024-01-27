@@ -1,0 +1,11 @@
+<!-- document_access_log_list.html -->
+{% extends 'base.html' %}
+
+{% block pageContent %}
+  <h2>Document Access Logs</h2>
+  <ul>
+    {% for log in access_logs %}
+      <li>{{ log.document_access.document_request.requester }} accessed on {{ log.access_date }}{% if log.return_date %}, returned on {{ log.return_date }}{% endif %}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

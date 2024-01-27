@@ -1,0 +1,36 @@
+{% extends "package/StoreRoom/add-store-room.html" %}
+
+<!-- Modal ID -->
+{% block modalId %} id="editModal{{ store_room.pk }}" {% endblock modalId %}
+
+<!-- Modal Title -->
+{% block modalTitle %}<i class="fas fa-edit"></i> Edit Store Room {% endblock modalTitle %}
+
+<!-- Form Action -->
+{% block formAction %} action="{% url 'edit-store-room' id=store_room.store_room_id %}" {% endblock formAction %}
+
+
+<!-- =========== All <inputs> =========== -->
+    {% block valueId %}
+    <div class="input-group mb-3">
+        <span class="btn border-secondary bg-light side-label"><i class="fas fa-key"></i></span><span class="text-danger require-dot" title="required">*</span>
+        <input type="text" name="store_room_id" value={{ store_room.store_room_id }} id="store_room_id" class="form-control" required>
+    </div>
+    {% endblock valueId %}
+    
+    <!-- Name -->
+    {% block valueName %} value="{{ store_room.store_room_name }}" {% endblock valueName %}
+    
+    <!-- Rack -->
+    {% block rackOption %} 
+    <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ store_room.rack }} </option>
+    {% endblock rackOption %}
+    
+    <!-- Branch -->
+    {% block branchOption %}
+    <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ store_room.branch }} </option>
+    {% endblock branchOption %}
+
+
+<!-- Button Action -->
+{% block btnAction %}<i class="fa fa-server" aria-hidden="true"></i>&nbsp; Save Changes {% endblock btnAction %}

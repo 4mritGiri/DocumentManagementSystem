@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from .models import CustomUser as User
 from .models import Post
 
 class UserRegistration(UserCreationForm):
@@ -15,26 +16,25 @@ class UserRegistration(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1','password2')
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
         # fields = ('username', 'email', 'first_name', 'last_name', 'password1','password2','role','branch','document_type','store')
         # Add more fields here
 
-        def clean_email(self):
-            email = self.clean_data['email'].lower()
-            try:
-                user = User.objects.get(email=email)
-            except Exception as e:
-                return email
-            raise forms.ValidationError(f"Email {user.email} mail is already exists/taken.")
-        
-        def clean_username(self):
-            username = self.clean_data['username'].lower()
-            try:
-                user = User.objects.get(username=username)
-            except Exception as e:
-                return username
-            raise forms.ValidationError(f"Username {user.username} is already exists/taken.")
-        
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+        raise forms.ValidationError(f"Email {user.email} is already taken.")
+
+    def clean_username(self):
+        username = self.cleaned_data['username'].lower()
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError(f"Username {user.username} is already taken.")    
 
 
 class UpdateProfile(UserChangeForm):
@@ -89,7 +89,7 @@ class SavePost(forms.ModelForm):
     def clean_title(self):
         id = self.instance.id if not self.instance == None else 0
         try:
-            if id.isnumeric():
+            if id.isnumeric(): # type: ignore
                  post = Post.objects.exclude(id = id).get(title = self.cleaned_data['title'])
             else:
                  post = Post.objects.get(title = self.cleaned_data['title'])
@@ -105,4 +105,10 @@ class SavePost(forms.ModelForm):
             return user
         except:
             raise forms.ValidationError("User ID is unrecognize.")
+
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'profile_picture', 'bio', 'phone_number', 'address', 'user_type')
 

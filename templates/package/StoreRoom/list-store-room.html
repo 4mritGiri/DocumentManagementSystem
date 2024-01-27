@@ -1,0 +1,86 @@
+{% extends 'package/table.html' %} 
+{% block title %}Store Room List{% endblock title %} 
+
+{% block tableTitle %}
+<i class="flaticon2-percentage text-primary"></i> Store Room List {% endblock tableTitle %} 
+
+{% block linkOrModal %} data-toggle="modal" data-target="#addModal"{% endblock linkOrModal %}
+{% block tHead %}
+<tr>
+  <th>Store Room ID</th>
+  <th>Store Room Name</th>
+  <th>Rack</th>
+  <th>Branch</th>
+  <th>Actions</th>
+</tr>
+{% endblock tHead %} {% block tBody %} {% for store_room in store_rooms %}
+<tr>
+  <td>{{ store_room.store_room_id }}</td>
+  <td>{{ store_room.store_room_name }}</td>
+  <td>{{ store_room.rack }}</td>
+  <td>{{ store_room.branch }}</td>
+  <td nowrap>
+    <a href="#" class="text-center m-1" title="View">
+      <i class="fas fa-eye fa-lg fa-fw text-success"></i>
+    </a>
+    <a href="" class="text-center m-1" title="Edit Store Room" data-toggle="modal" data-target="#editModal{{ store_room.pk}}">
+      <i class="fas fa-edit fa-lg fa-fw text-primary"></i>
+    </a>
+    <a href="#" class="text-center m-1" title="Delete store room" onclick="deleteStoreRoom('{{ store_room.store_room_id }}', '{{ store_room.store_room_name }}')">
+      <i class="fas fa-trash-alt text-danger"></i> 
+    </a> 
+  </td>
+</tr>
+
+<!-- Include -->
+{% include "package/StoreRoom/edit-store-room.html" %}
+
+ 
+<script>
+  function deleteStoreRoom(storeRoomId, storeRoomName) {
+    console.log('Deleting store room:', storeRoomId);
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+      title: "DO YOU WANT TO DELETE THIS STORE ROOM ???",
+      text: "Store Room: " + storeRoomName,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Send AJAX request to delete the store room
+        $.ajax({
+          url: `/package/delete-store-room/${storeRoomId}`,
+          success: function (data) {
+            swalWithBootstrapButtons.fire({
+              title: "Deleted!",
+              text: data.message,
+              icon: "success"
+            }).then(() => {
+              // Reload the page or update the table after successful deletion
+              location.reload();
+            });
+          },
+          error: function (error) {
+            swalWithBootstrapButtons.fire({
+              title: "Error",
+              text: "Failed to delete store room",
+              icon: "error"
+            });
+          }
+        });
+      }
+    });
+  }
+</script>
+{% endfor %} {% endblock tBody %}

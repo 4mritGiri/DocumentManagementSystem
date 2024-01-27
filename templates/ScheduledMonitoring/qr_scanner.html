@@ -1,0 +1,253 @@
+{% comment %} {% extends "base.html" %} {% endcomment %}
+
+{% load static %}
+<title>{% block title %}QR scanner{% endblock title %}</title>
+{% block pageContent %}
+
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+  }
+
+  .title {
+    margin-top: 1em;
+    font-size: 1.75em;
+    color: skyblue;
+  }
+
+  #previewContainer {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 1em auto;
+  }
+
+  #preview {
+    width: 100%;
+    height: 80%;
+    border: 1px solid #000;
+    border-radius: 8px;
+  }
+
+  #imageIcon {
+    position: absolute;
+    top: 15%;
+    left: 95%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    cursor: pointer;
+  }
+  #file-upload {
+    display: none;
+  }
+  #fullscreenBtn {
+    position: absolute;
+    bottom: 5%;
+    left: 95%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    cursor: pointer;
+  }
+
+  @media (max-width: 992px) {
+    #preview {
+      height: 60vh;
+    }
+  }
+
+  @media (max-width: 768px) {
+    #preview {
+      height: 50vh;
+    }
+  }
+</style>
+
+<div class="container">
+  
+  <div id="previewContainer">
+    <video id="preview" playsinline></video>
+    <img id="img-preview" style="display: none" alt="Image Preview" />
+
+    <img
+      id="imageIcon"
+      src="{% static 'qr.png' %}"
+      alt="Image Icon"
+      width="50"
+      height="50"
+    />
+
+    <button style="background: rgba(0, 0, 0, 0.01)" id="fullscreenBtn">
+      <i
+        class="fa fa-expand text-warning"
+        id="fullscreenBtn"
+        aria-hidden="true"
+      ></i>
+    </button>
+  </div>
+  <form
+    method="post"
+    action="{% url 'process-qr-code' %}"
+    enctype="multipart/form-data"
+    onsubmit="return validateForm()"
+  >
+    {% csrf_token %}
+    <input type="hidden" id="scanned-data-input" name="scanned_data" />
+    <input
+      type="file"
+      name="image"
+      id="file-upload"
+      accept="image/*"
+      style="display: none"
+      onchange="handleImageSelection(this)"
+    />
+    <br />
+    <p id="error-message"></p>
+    <input type="submit" value="Submit" style="display: none" />
+  </form>
+</div>
+
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<!-- <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script> -->
+
+<script src="{% static "assets/plugins/custom/instascan/instascan.min.js" %}"></script>
+
+<script>
+  var imgPreview = document.getElementById("img-preview");
+  var videoPreview = document.getElementById("preview");
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.error("getUserMedia is not supported in this browser.");
+      return;
+    }
+
+    const scanner = new Instascan.Scanner({
+      video: document.getElementById("preview"),
+    });
+
+    document.getElementById("imageIcon").addEventListener("click", function () {
+      document.getElementById("file-upload").click();
+    });
+
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then(function (stream) {
+        document.getElementById("preview").srcObject = stream;
+
+        scanner.addListener("scan", function (content) {
+          const scannedData =
+            typeof content === "string" ? JSON.parse(content) : content;
+          console.log("Scanned Data:", scannedData);
+
+          // Update the hidden input field with the scanned data
+          document.getElementById("scanned-data-input").value =
+            JSON.stringify(scannedData);
+
+          // Submit the form
+          document.querySelector("form").submit();
+        });
+      })
+      .catch(function (error) {
+        console.error("Error accessing camera:", error);
+      });
+
+    Instascan.Camera.getCameras()
+      .then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error("No cameras found.");
+        }
+      })
+      .catch(function (e) {
+        console.error("Camera Error:", e);
+      });
+
+    document
+      .getElementById("fullscreenBtn")
+      .addEventListener("click", function () {
+        toggleFullScreen();
+      });
+  });
+  function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      // If the video is not in full-screen mode, request it
+      if (videoPreview.requestFullscreen) {
+        videoPreview.requestFullscreen();
+      } else if (videoPreview.mozRequestFullScreen) {
+        // Firefox
+        videoPreview.mozRequestFullScreen();
+      } else if (videoPreview.webkitRequestFullscreen) {
+        // Chrome, Safari and Opera
+        videoPreview.webkitRequestFullscreen();
+      } else if (videoPreview.msRequestFullscreen) {
+        // IE/Edge
+        videoPreview.msRequestFullscreen();
+      }
+    } else {
+      // If the video is already in full-screen mode, exit it
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+  }
+
+  // Add a function to validate the form if needed
+  function validateForm() {
+    var fileInput = document.querySelector('input[type="file"]');
+    var errorMessage = document.getElementById("error-message");
+
+    if (!fileInput.value) {
+      errorMessage.innerText = "No image selected. Please choose an image.";
+      return false;
+    } else {
+      // Submit the form
+      document.querySelector("form").submit();
+      errorMessage.innerText = "";
+      return true;
+    }
+  }
+
+  function clearImg() {
+    imgPreview.src = "";
+    videoPreview.style.display = "block";
+    imgPreview.style.display = "none";
+  }
+  function handleImageSelection(input) {
+    const file = input.files[0];
+    var reader = new FileReader();
+
+    reader.onloadend = function () {
+      imgPreview.src = reader.result;
+    };
+
+    if (file) {
+      imgPreview.style.display = "block";
+      videoPreview.style.display = "none";
+      reader.readAsDataURL(file);
+      validateForm();
+    } else {
+      imgPreview.src = "";
+      videoPreview.style.display = "block";
+      imgPreview.style.display = "none";
+    }
+  }
+  
+  var result = "{{result}}";
+  if (result != "") {
+    Swal.fire({
+      icon: "success",
+      title: "Success",
+      text: result,
+    });
+  }
+</script>
+{% endblock ScriptBlock %}

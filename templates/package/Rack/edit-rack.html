@@ -1,0 +1,31 @@
+{% extends "package/Rack/create-rack.html" %}
+
+<!-- Modal ID -->
+{% block modalId %} id="editRackModal{{ rack.pk }}" {% endblock modalId %}
+
+<!-- Modal Title -->
+{% block modalTitle %}<i class="fas fa-edit"></i> Edit Rack {% endblock modalTitle %}
+
+<!-- Form Action -->
+{% block formAction %} action="{% url 'edit-rack' id=rack.rack_id %}" {% endblock formAction %}
+
+
+<!-- =========== All <inputs> =========== -->
+    {% block valueId %}
+    <div class="input-group mb-3">
+        <span class="btn border-secondary bg-light side-label"><i class="fas fa-key"></i></span><span class="text-danger require-dot" title="required">*</span>
+        <input type="text" name="rack_id" value={{ rack.rack_id }} id="rack_id" class="form-control" required>
+    </div>
+    {% endblock valueId %}
+    
+    <!-- Name -->
+    {% block valueName %} value="{{ rack.rack_name }}" {% endblock valueName %}
+    
+    {% comment %} <!-- Rack -->
+    {% block compartmentOption %} 
+    <option style="background-color: #d3d3d3; counter-reset: #111;"> {{ rack.compartment }} </option>
+    {% endblock compartmentOption %} {% endcomment %}
+
+
+<!-- Button Action -->
+{% block btnAction %}<i class="fa fa-server" aria-hidden="true"></i>&nbsp; Save Changes {% endblock btnAction %}

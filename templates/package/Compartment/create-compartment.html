@@ -1,0 +1,64 @@
+{% extends "modalBase.html" %}
+
+<!-- Modal For Create Compartment -->
+{% block modalId %} id="addCompartmentModal" {% endblock modalId %}
+
+{% block modalTitle %} <i class="fas fa-plus"></i>&nbsp; Add Compartment{% endblock modalTitle %} 
+
+{% block modalBody %}
+<form method="POST" {% block formAction %} action="{% url 'create-compartment' %}" {% endblock formAction %} >
+  {% csrf_token %}
+  <div class="modal-body">
+    {% block valueId %}{% endblock valueId %}
+
+    <!-- Compartment Name -->
+    <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"
+        ><i class="fas fa-person-booth    "></i></span
+      ><span class="text-danger require-dot" title="required">*</span>
+      <input type="text" name="compartment_name" id="compartment_name" class="form-control" maxlength="60" placeholder="Compartment Name*" {% block valueName %}{% endblock valueName %} required />
+    </div>
+
+    <!-- Compartment Location -->
+    <div class="input-group mb-3">
+        <span class="btn border-secondary bg-light side-label"
+          ><i class="fa fa-location-arrow" aria-hidden="true"></i></span
+        ><span class="text-danger require-dot" title="required">*</span>
+        <input type="text" name="compartment_location" id="compartment_location" class="form-control" maxlength="60" placeholder="Compartment Location*" {% block valueLocation %}{% endblock valueLocation %} required />
+    </div>
+
+    <!-- Rack -->
+    <div class="input-group mb-3">
+      <span class="btn border-secondary bg-light side-label"><i class="fa fa-server" aria-hidden="true"></i></span>
+      <span class="text-danger require-dot" title="required">*</span>
+      <select name="rack" class="form-control" required>
+        {% block rackOption %}
+        <option value="" hidden>Select Rack</option>
+        {% endblock rackOption %}
+        {% for rack in racks %}
+        <option value="{{ rack.rack_id }}">{{ rack.rack_name }}</option>
+        {% endfor %}
+    </select>
+      &nbsp;<span class="btn border-success bg-light" title="Add Rack"><i class="fa fa-plus text-success" aria-hidden="true"></i></span>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-end" style="width: 100%">
+      <button type="submit" class="btn btn-success mb-3">
+        {% block btnAction %}<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;
+        Add Compartment{% endblock btnAction %}
+      </button>
+      <button type="reset" class="btn btn-outline-dark mb-3 ml-2" title="Reset">
+        <i class="fa fa-sync-alt" aria-hidden="true"></i>&nbsp;
+      </button>
+      <button
+        type="button"
+        data-dismiss="modal"
+        class="btn btn-outline-danger mb-3 ml-2"
+        title="Close"
+      >
+        <i class="fa fa-times" aria-hidden="true"></i>&nbsp;
+      </button>
+    </div>
+  </div>
+</form>
+{% endblock modalBody %}

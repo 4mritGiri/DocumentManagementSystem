@@ -1,0 +1,11 @@
+asgiref==3.7.2
+cffi==1.16.0
+cryptography==41.0.7
+Django==5.0
+Pillow==10.1.0
+pycparser==2.21
+pypng==0.20220715.0
+pytz==2023.3.post1
+qrcode==7.4.2
+sqlparse==0.4.4
+typing_extensions==4.9.0

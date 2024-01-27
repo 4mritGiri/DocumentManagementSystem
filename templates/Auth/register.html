@@ -1,0 +1,109 @@
+{% extends "Auth/authBase.html" %} 
+
+{% block loginTitle %}Register{% endblock loginTitle %}
+
+{% block authBody %}
+<!--begin::Login Sign up form-->
+<div class="login-signup">
+  <div class="mb-12">
+    <h3 class="opacity-40 font-weight-normal">Sign Up</h3>
+    <p class="opacity-40">Enter your details to create your account</p>
+  </div>
+  <form
+    class="form text-center"
+    id="kt_login_signup_form"
+    method="POST"
+    action="{% url 'register-user' %}"
+  >
+    {% csrf_token %}
+    <div class="form-group row">
+      <div class="col-6">
+        <input
+          class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+          type="text"
+          placeholder="First Name"
+          name="first_name"
+          id="first_name"
+          value="{{ reg_form.data.first_name }}"
+          required
+        />
+      </div>
+      <div class="col-6">
+        <input
+          class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+          type="text"
+          placeholder="Last Name"
+          name="last_name"
+          id="last_name"
+          value="{{ reg_form.data.last_name }}"
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="text"
+        placeholder="Email"
+        name="email"
+        id="email"
+        value="{{ reg_form.data.email }}"
+        autocomplete="on"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="text"
+        placeholder="username"
+        name="username"
+        id="username"
+        value="{{ reg_form.data.username }}"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="password"
+        placeholder="Password"
+        name="password1"
+        id="password1"
+        value="{{ reg_form.data.password1 }}"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <input
+        class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
+        type="password"
+        placeholder="Confirm Password"
+        name="password2"
+        id="password2"
+        value="{{ reg_form.data.password2 }}"
+        required
+      />
+    </div>
+    {% for field in reg_form %} {% for error in field.errors %}
+    <div class="alert alert-danger my-2">
+      <p>{{ error }}</p>
+    </div>
+    {% endfor %} {% endfor %}
+    <div class="form-group">
+      <button
+        id="kt_login_signup_submit"
+        class="btn btn-pill btn-primary opacity-90 px-15 py-3 m-2"
+      >
+        Sign Up
+      </button>
+      <a href="{% url 'home-page' %}"
+      class="btn btn-pill btn-outline-white opacity-70 px-15 py-3 m-2"
+      >
+      Sign In
+    </a>
+    {% comment %} id="kt_login_signup_cancel" {% endcomment %}
+    </div>
+  </form>
+</div>
+<!--end::Login Sign up form-->
+{% endblock authBody %}
