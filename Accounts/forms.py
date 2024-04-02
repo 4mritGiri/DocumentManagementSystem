@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
+# from django.contrib.auth.models import User
 from .models import CustomUser as User
-from .models import Post
 
 class UserRegistration(UserCreationForm):
     email = forms.EmailField(max_length=250, help_text="The email field is required")
@@ -75,36 +75,6 @@ class UpdatePasswords(PasswordChangeForm):
     class Meta:
         model = User
         fields = ('old_password','new_password1', 'new_password2')
-
-class SavePost(forms.ModelForm):
-    user = forms.IntegerField(help_text = "User Field is required.")
-    title = forms.CharField(max_length=250,help_text = "Title Field is required.")
-    description = forms.Textarea()
-
-    class Meta:
-        model= Post
-        fields = ('user','title','description','file_path')
-    
-    def clean_title(self):
-        id = self.instance.id if not self.instance == None else 0
-        try:
-            if id.isnumeric(): # type: ignore
-                 post = Post.objects.exclude(id = id).get(title = self.cleaned_data['title'])
-            else:
-                 post = Post.objects.get(title = self.cleaned_data['title'])
-        except:
-            return self.cleaned_data['title']
-        raise forms.ValidationError(f'{post.title} post Already Exists.')
-
-    def clean_user(self):
-        user_id = self.cleaned_data['user']
-        print("USER: "+ str(user_id))
-        try:
-            user = User.objects.get(id = user_id)
-            return user
-        except:
-            raise forms.ValidationError("User ID is unrecognize.")
-
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:

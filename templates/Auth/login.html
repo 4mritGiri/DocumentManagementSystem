@@ -69,7 +69,7 @@
   <div class="mt-10">
     <span class="opacity-40 mr-4"> Don't have an account yet? </span>
     <a
-      href="{% url "register-user" %}"
+      href="{% url "Accounts:register-user" %}"
       class="text-white opacity-30 font-weight-normal"
       >Sign Up</a
       >
@@ -98,7 +98,7 @@
         headers: {
           "X-CSRFToken": '{{csrf_token}}'
         },
-        url: "{% url 'login-user' %}",
+        url: "{% url 'Accounts:login-user' %}",
         data: new FormData(_this[0]),
         cache: false,
         contentType: false,
@@ -122,9 +122,9 @@
             _this.prepend(el);
             el.show('slow');
             $("html, body, .modal").scrollTop(0);
-            window.location.href = "{% url 'login' %}";
+            window.location.href = "{% url 'Accounts:login' %}";
           } else if (resp.is_login === false) {
-            window.location.href = "{% url 'login' %}";
+            window.location.href = "{% url 'Accounts:login' %}";
           } else {
             el.text("An error occurred", 'error');
             console.error(resp);

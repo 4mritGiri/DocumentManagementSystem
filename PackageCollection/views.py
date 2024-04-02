@@ -15,7 +15,7 @@ def packageCollection(request):
 
 # Function of create packageCollection 
 
-@login_required(login_url='login')
+@login_required(login_url='Accounts:login')
 def createPackageCollection(request):
     if request.method == 'POST':
         package_collection = PackageCollection()

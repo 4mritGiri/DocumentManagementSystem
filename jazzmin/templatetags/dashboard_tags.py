@@ -5,9 +5,12 @@ from Package.models import Package, Branch, Document, PackageVerification,Compar
 from DestructionEligible.models import DestructionEligible
 from datetime import timedelta
 from django.utils import timezone
-from dmsApp.models import CustomUser
+from django.contrib.auth import get_user_model
+
 
 register = template.Library()
+
+CustomUser = get_user_model()
 
 @register.simple_tag
 def get_total_users():

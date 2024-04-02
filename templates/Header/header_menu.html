@@ -12,9 +12,10 @@
                 <!--begin::Header Nav-->
                 <ul class="menu-nav ">
                     <li class="menu-item  menu-item-open menu-item-here menu-item-submenu menu-item-rel menu-item-open menu-item-here menu-item-active"
-                        data-menu-toggle="click" aria-haspopup="true"><a href="javascript:;"
-                            class="menu-link menu-toggle"><span class="menu-text">Package</span><i
-                                class="menu-arrow"></i></a>
+                        data-menu-toggle="click" aria-haspopup="true">
+                        <a href="{% url "list-package" %}" class="menu-link "><!--menu-toggle-->
+                            <span class="menu-text">Package</span>
+                            <i class="menu-arrow"></i></a>
                         {% comment %} <div class="menu-submenu menu-submenu-classic menu-submenu-left">
                             <ul class="menu-subnav">
                                 <li class="menu-item  menu-item-active " aria-haspopup="true"><a
@@ -176,8 +177,9 @@
                         </div> {% endcomment %}
                     </li>
                     <li class="menu-item  menu-item-submenu" data-menu-toggle="click"
-                        aria-haspopup="true"><a href="javascript:;" class="menu-link menu-toggle"><span
-                                class="menu-text">Destruction Eligible</span><i class="menu-arrow"></i></a>
+                        aria-haspopup="true">
+                        <a href="{% url "list-destruction-eligible" %}" class="menu-link"> <!--menu-toggle-->
+                            <span class="menu-text">Destruction Eligible</span><i class="menu-arrow"></i></a>
                         {% comment %} <div class="menu-submenu  menu-submenu-fixed menu-submenu-left"
                             style="width:1000px">
                             <div class="menu-subnav">

@@ -7,16 +7,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Package
+from .models import Package, StoreRoom
 from .models import StoreMonitoring
 
-@login_required(login_url='login')
+@login_required(login_url='Accounts:login')
 def qr_scanner(request):
 
     return render(request, 'ScheduledMonitoring/qr_scanner.html')
 
 @csrf_exempt
-@login_required(login_url='login')
+@login_required(login_url='Accounts:login')
 def process_qr_code(request):
 
     if request.method == 'GET':
@@ -65,7 +65,7 @@ def process_qr_code(request):
     messages.error(request, 'Invalid request method. NOT GET or POST.')
     return render(request, 'ScheduledMonitoring/qr_scanner.html')
 
-@login_required(login_url='login')
+@login_required(login_url='Accounts:login')
 def update_condition(request):
 
     if request.method == 'POST':
@@ -92,14 +92,14 @@ def update_condition(request):
 # *****************
 
 # Function to list all StoreMonitoring
-@login_required(login_url='login')
+@login_required(login_url='Accounts:login')
 def listStoreMonitoring(request):
     store_monitoring = StoreMonitoring.objects.all()
     return render(request, 'ScheduledMonitoring/StoreMonitoring/list_store_monitoring.html', {'store_monitoring': store_monitoring})
 
 
 # Function to Store Monitoring
-@login_required(login_url='login')
+@login_required(login_url='Accounts:login')
 def addStoreMonitoring(request):
     if request.method == 'POST':
         store_room = request.POST.get('store_room')
@@ -117,4 +117,27 @@ def addStoreMonitoring(request):
             return redirect('list-store-monitoring')
 
     return render(request, 'ScheduledMonitoring/StoreMonitoring/add_store_monitoring.html')
+
+def add_store_monitoring(request):
+    template_name = 'ScheduledMonitoring/StoreMonitoring/add_store_monitoring.html'
+
+    if request.method == 'GET':
+        store_rooms = StoreRoom.objects.all()
+        return render(request, template_name, {'store_rooms': store_rooms})
+
+    elif request.method == 'POST':
+        store_room_id = request.POST.get('store_room')
+        scheduled_date = request.POST.get('scheduled_date')
+        comments = request.POST.get('comments')
+
+        store_room = StoreRoom.objects.get(id=store_room_id)
+        
+        StoreMonitoring.objects.create(
+            store_room=store_room,
+            scheduled_date=scheduled_date,
+            comments=comments
+        )
+
+        return redirect('list-store-monitoring')
+
 

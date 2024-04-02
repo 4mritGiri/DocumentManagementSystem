@@ -11,7 +11,8 @@ admin.site.index_title = 'Welcome to DMS Admin Portal'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("dashboard.urls")),
-    path("post/", include("dmsApp.urls")),
+    path("accounts/", include("Accounts.urls")),
+    # path("post/", include("dmsApp.urls")),
     path("package/", include("Package.urls")),
     path("document/", include("DocumentApps.urls")),
     path("scheduled-monitoring/", include("ScheduledMonitoring.urls")),
