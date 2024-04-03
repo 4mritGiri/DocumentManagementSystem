@@ -21,7 +21,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'channels',
     'jazzmin',
     'daphne',
     'django.contrib.admin',
@@ -32,7 +31,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-    'dmsApp.apps.DmsappConfig',
+    # local apps
+    'Accounts.apps.AccountsConfig',
+    # 'dmsApp.apps.DmsappConfig',
     'Package.apps.PackageConfig',
     'PackageCollection.apps.PackagecollectionConfig',
     'DestructionEligible.apps.DestructioneligibleConfig',
@@ -44,6 +45,9 @@ INSTALLED_APPS = [
     # for beat schedule
     'django_celery_beat', 
     'django_celery_results',
+
+    # 3rd party apps
+    'user_visit', # pip install 
 ]
 
 JAZZMIN_SETTINGS = {
@@ -229,6 +233,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'user_visit.middleware.UserVisitMiddleware',
 ]
 
 ROOT_URLCONF = 'DocumentManagementSystem.urls'
@@ -262,9 +267,15 @@ ASGI_APPLICATION = 'DocumentManagementSystem.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'dbaa.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -323,7 +334,7 @@ ID_ENCRYPTION_KEY = b'UdhnfelTxqj3q6BbPe7H86sfQnboSBzb0irm2atoFUw='
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-AUTH_USER_MODEL = 'dmsApp.CustomUser'
+AUTH_USER_MODEL = 'Accounts.CustomUser'
 
 
     # ***********************************

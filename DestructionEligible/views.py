@@ -7,7 +7,7 @@ from .models import DestructionEligible
 # Destruction Eligible
 
 # Function to show list of all destruction eligible packages
-@login_required(login_url='login')
+@login_required(login_url='Accounts:login')
 def listDestructionEligible(request):
     destruction_eligibles = DestructionEligible.objects.all()
 

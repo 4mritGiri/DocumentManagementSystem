@@ -1,61 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
 <title>{% block title %}Dashboard{% endblock title %}</title>
+
 {% block pageContent %}
 
-<div class="text-center px-12 -mt-4">
-  <p>Total Registered Users: {{ total_users }}</p>
-
-  <!-- Chart.js -->
-<canvas id="userChart" width="400" style="height: 30vh;"></canvas>
+<div class="row">
+    {% for card in cards %}
+<div class="col-md-3 col-sm-12 mb-2">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="m-0">{{ card.title }}</h6>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-6">
+                    <a href="{{ card.link }}" class="btn btn-block">
+                        <i class="{{ card.icon }}"></i>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="{{ card.link }}" class="btn">
+                        {% with count_result=card.value %} 
+                            <span class="badge text-md badge-{{ card.badge_color }} badge-pill">{{ count_result }}</span>
+                        {% endwith %}
+                    </a>                            
+                </div>
+            </div>
+            {% comment %} <ul class="list-group align-items-center">
+                <li class="d-flex justify-content-between align-items-center pt-2">
+                    {{ card.title }}
+                </li>
+            </ul> {% endcomment %}
+        </div>
+    </div>
 </div>
-
+{% endfor %}
+</div>
 {% endblock pageContent %}
-
-{% block ScriptBlock %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-      var ctx = document.getElementById('userChart').getContext('2d');
-      var userChart = new Chart(ctx, {
-          // type: 'bar',
-          data: {
-              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-              datasets: [
-                {
-                    type: 'bar',
-                    label: 'Monthly Registrations',
-                    data: {{ monthly_data | safe }},
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                },
-                {
-                    type: 'polarArea',
-                    label: 'Monthly Logins',
-                    data: {{ monthly_logins | safe }},
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                },
-                {
-                    type: 'line',
-                    label: 'Monthly Logouts',
-                    data: {{ monthly_logouts | safe }},
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }
-              ]
-          },
-          options: {
-              scales: {
-                  y: {
-                      beginAtZero: true
-                  }
-              }
-          }
-      });
-  });
-</script>
-{% endblock %}
