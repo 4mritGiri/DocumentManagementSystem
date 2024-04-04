@@ -23,5 +23,12 @@
         "src": "/(.*)",
         "dest": "DocumentManagementSystem/wsgi.py"
       }
+    ],
+    "rewrites": [
+      { 
+        "source": "/(.*)", 
+        "destination": "/DocumentManagementSystem/wsgi.py" 
+      }
     ]
+    
   }
