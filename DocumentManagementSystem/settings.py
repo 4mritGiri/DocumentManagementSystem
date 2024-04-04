@@ -21,10 +21,14 @@ if ENVIRONMENT == 'production':
     print("Production Environment...")
     DEBUG = False
     ALLOWED_HOSTS = ["dms.up.railway.app", ".vercel.app", ".now.sh"]
-else:
-    print("Development Environment...")
-    DEBUG = True
-    ALLOWED_HOSTS = ["127.0.0.1","localhost"]
+# else:
+#     print("Development Environment...")
+#     DEBUG = True
+#     ALLOWED_HOSTS = ["127.0.0.1","localhost"]
+
+DEBUG = True
+
+ALLOWED_HOSTS = ["127.0.0.1","localhost", "dms.up.railway.app", ".vercel.app", ".now.sh"]
 
 CSRF_TRUSTED_ORIGINS = ["https://dms.up.railway.app"]
 
