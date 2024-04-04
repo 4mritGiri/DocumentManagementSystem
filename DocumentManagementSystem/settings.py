@@ -284,13 +284,14 @@ ASGI_APPLICATION = 'DocumentManagementSystem.asgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
-        "PORT": os.environ.get("DB_PORT"),
+        "NAME": os.environ.get("DMS_DATABASE"),
+        "USER": os.environ.get("DMS_USER"),
+        "PASSWORD": os.environ.get("DMS_PASSWORD"),
+        "HOST": os.environ.get("DMS_HOST"),
+        "PORT": os.environ.get("DMS_PORT"),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
