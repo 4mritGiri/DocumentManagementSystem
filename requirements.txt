@@ -20,6 +20,7 @@ django-celery-beat==2.5.0
 django-celery-results==2.5.1
 django-timezone-field==6.1.0
 django-user-visit==2.0
+gunicorn==21.2.0
 hyperlink==21.0.0
 idna==3.6
 incremental==22.10.0
