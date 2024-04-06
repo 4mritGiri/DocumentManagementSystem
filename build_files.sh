@@ -1,16 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "Building files..."
 
-# Install pip
-apt-get update
-apt-get install -y python3-pip
-
-# Install Django
-pip3 install django
-
 echo "Installing requirements..."
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
 echo "Make migrations..."
 python3 manage.py makemigrations
