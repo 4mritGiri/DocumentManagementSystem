@@ -6,8 +6,6 @@ echo "Installing pip..."
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3 get-pip.py
 
-# check python3 version
-echo "Checking python3 version..."
 python3 --version
 
 echo "Installing requirements..."
