@@ -3,7 +3,7 @@
 echo "Building files..."
 
 echo "Installing requirements..."
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 
 echo "Make migrations..."
 python3 manage.py makemigrations
