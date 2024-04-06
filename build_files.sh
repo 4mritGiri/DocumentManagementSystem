@@ -2,6 +2,13 @@
 
 echo "Building files..."
 
+# Install pip
+apt-get update
+apt-get install -y python3-pip
+
+# Install Django
+pip3 install django
+
 echo "Installing requirements..."
 pip install -r requirements.txt
 
