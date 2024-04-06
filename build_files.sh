@@ -5,13 +5,13 @@ echo "Installing requirements..."
 pipenv install -r requirements.txt
 
 echo "Make migrations..."
-python3.11 manage.py makemigrations
+python3 manage.py makemigrations
 
 echo "Migrate..."
-python3.11 manage.py migrate
+python3 manage.py migrate
 
 echo "Collecting static files..."
-python3.11 manage.py collectstatic --noinput --clear
+python3 manage.py collectstatic --noinput --clear
 
 echo "Files built successfully!"
 
