@@ -2,9 +2,15 @@
 
 echo "Building files..."
 
-# Install libzbar-devel package (for yum-based systems)
+# Manually install libzbar-devel
 echo "Installing libzbar-devel..."
-yum install -y zbar-devel
+# Example commands, modify as per your specific version and source code location
+wget https://github.com/mchehab/zbar/archive/master.zip
+unzip master.zip
+cd zbar-master
+./configure
+make
+make install
 
 echo "Installing requirements..."
 python3 -m pip install -r requirements.txt
