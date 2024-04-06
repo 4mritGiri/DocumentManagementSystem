@@ -13,16 +13,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j^$jpl2!yr(2)l&)(cz(utnunbk+ruou_psi)qc338k0j48(*^'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+ENVIRONMENT = os.getenv('ENVIRONMENT', default='development')
+if ENVIRONMENT == 'production':
+    print("Production Environment...")
+    DEBUG = False
+    ALLOWED_HOSTS = ["dms.up.railway.app", ".vercel.app", ".now.sh"]
+# else:
+#     print("Development Environment...")
+#     DEBUG = True
+#     ALLOWED_HOSTS = ["127.0.0.1","localhost"]
+
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1","localhost", ".vercel.app", ".now.sh"]
+ALLOWED_HOSTS = ["127.0.0.1","localhost", "dms.up.railway.app", ".vercel.app", ".now.sh"]
 
+CSRF_TRUSTED_ORIGINS = ["https://dms.up.railway.app"]
 
 # Application definition
-
 INSTALLED_APPS = [
     'jazzmin',
     'daphne',
@@ -260,8 +270,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'DocumentManagementSystem.wsgi.application'
-ASGI_APPLICATION = 'DocumentManagementSystem.asgi.application'
+WSGI_APPLICATION = 'DocumentManagementSystem.wsgi.app'
+ASGI_APPLICATION = 'DocumentManagementSystem.asgi.app'
 
 
 # Database

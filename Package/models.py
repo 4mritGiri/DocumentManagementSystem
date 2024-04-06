@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-print("Importing singlas...")
 from . import signals
 
 # Create your models here.
