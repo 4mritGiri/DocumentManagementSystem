@@ -12,6 +12,10 @@ yum install -y curl
 curl -O http://example.com/path/to/zbar-devel.rpm
 yum install -y ./zbar-devel.rpm
 
+# check python3 version
+echo "Checking python3 version..."
+python3 --version
+
 echo "Installing requirements..."
 python3 -m pip install -r requirements.txt
 
