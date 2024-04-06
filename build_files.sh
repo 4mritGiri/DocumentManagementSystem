@@ -1,8 +1,9 @@
-# Build files.sh for vercel deployment
+#!/bin/bash
+
 echo "Building files..."
 
 echo "Installing requirements..."
-pipenv install -r requirements.txt
+pip install -r requirements.txt
 
 echo "Make migrations..."
 python3 manage.py makemigrations
