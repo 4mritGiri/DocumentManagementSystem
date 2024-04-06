@@ -8,9 +8,7 @@ python3 get-pip.py
 
 # Install libzbar-devel using curl to download the RPM package and yum to install it
 echo "Installing libzbar-devel..."
-yum install -y curl
-curl -O https://rpmfind.net/linux/fedora/linux/development/rawhide/Everything/x86_64/os/Packages/z/zbar-devel-0.23.93-2.fc40.x86_64.rpm
-yum install -y ./zbar-devel-0.23.93-2.fc40.x86_64
+yum -y install zbar
 
 # check python3 version
 echo "Checking python3 version..."
