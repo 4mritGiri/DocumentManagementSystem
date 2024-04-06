@@ -27,7 +27,7 @@
     "rewrites": [
       { 
         "source": "/(.*)", 
-        "destination": "/DocumentManagementSystem/wsgi.py" 
+        "destination": "DocumentManagementSystem/wsgi.py" 
       }
     ]
 
