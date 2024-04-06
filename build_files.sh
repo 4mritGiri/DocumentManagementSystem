@@ -2,6 +2,10 @@
 
 echo "Building files..."
 
+echo "Installing pip..."
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py
+
 # Install libzbar-devel using curl to download the RPM package and yum to install it
 echo "Installing libzbar-devel..."
 yum install -y curl
