@@ -2,9 +2,9 @@
 
 echo "Building files..."
 
-# echo "Installing pip..."
-# curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-# python3 get-pip.py
+# Install libzbar-devel package (for yum-based systems)
+echo "Installing libzbar-devel..."
+yum install -y zbar-devel
 
 echo "Installing requirements..."
 python3 -m pip install -r requirements.txt
