@@ -2,9 +2,11 @@
 
 echo "Building files..."
 
-# Manually install libzbar-devel using yum
+# Install libzbar-devel using curl to download the RPM package and yum to install it
 echo "Installing libzbar-devel..."
-sudo yum install -y zbar-devel
+yum install -y curl
+curl -O http://example.com/path/to/zbar-devel.rpm
+yum install -y ./zbar-devel.rpm
 
 echo "Installing requirements..."
 python3 -m pip install -r requirements.txt
