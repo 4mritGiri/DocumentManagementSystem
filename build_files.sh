@@ -1,4 +1,5 @@
-# Build files.sh for vercel deployment
+#!/bin/bash
+
 echo "Building files..."
 
 echo "Installing requirements..."
