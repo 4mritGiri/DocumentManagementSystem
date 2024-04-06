@@ -270,8 +270,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'DocumentManagementSystem.wsgi.app'
-ASGI_APPLICATION = 'DocumentManagementSystem.asgi.app'
+WSGI_APPLICATION = 'DocumentManagementSystem.wsgi.application'
+ASGI_APPLICATION = 'DocumentManagementSystem.asgi.application'
 
 
 # Database
