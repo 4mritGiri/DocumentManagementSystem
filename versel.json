@@ -1,34 +1,12 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "DocumentManagementSystem/wsgi.py",
-        "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
-      },
-      {
-        "src": "build_files.sh",
-        "use": "@vercel/static-build",
-        "config": {
-          "distDir": "staticfiles"
-        }
-      }
-    ],
-    "routes": [
-      {
-        "src": "/static/(.*)",
-        "dest": "/static/$1"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "DocumentManagementSystem/wsgi.py"
-      }
-    ],
-    "rewrites": [
-      { 
-        "source": "/(.*)", 
-        "destination": "DocumentManagementSystem/wsgi.py" 
-      }
-    ]
-
+  "version": 2,
+  "builds": [
+    { "src": "manage.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/manage.py" }
+  ],
+  "env": {
+    "DJANGO_SETTINGS_MODULE": "DocumentManagementSystem.settings"
   }
+}
