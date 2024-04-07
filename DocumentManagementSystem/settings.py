@@ -283,24 +283,24 @@ ASGI_APPLICATION = 'DocumentManagementSystem.asgi.application'
 #         'NAME': BASE_DIR / 'dbaa.sqlite3',
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# PostgreSQL Database Configuration for Production in vercel
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.environ.get("DMS_DATABASE"),
-        "USER": os.environ.get("DMS_USER"),
-        "PASSWORD": os.environ.get("DMS_PASSWORD"),
-        "HOST": os.environ.get("DMS_HOST"),
-        "PORT": os.environ.get("DMS_PORT"),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# PostgreSQL Database Configuration for Production in vercel
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": os.environ.get("DMS_DATABASE"),
+#         "USER": os.environ.get("DMS_USER"),
+#         "PASSWORD": os.environ.get("DMS_PASSWORD"),
+#         "HOST": os.environ.get("DMS_HOST"),
+#         "PORT": os.environ.get("DMS_PORT"),
+#     }
+# }
 
 
 # Password validation
