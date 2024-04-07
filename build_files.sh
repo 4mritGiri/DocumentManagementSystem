@@ -2,9 +2,9 @@
 
 echo "Building files..."
 
-echo "Installing pip..."
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3 get-pip.py
+# echo "Installing pip..."
+# curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+# python3 get-pip.py
 
 python3 --version
 
