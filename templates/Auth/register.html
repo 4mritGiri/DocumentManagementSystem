@@ -13,7 +13,7 @@
     class="form text-center"
     id="kt_login_signup_form"
     method="POST"
-    action="{% url 'register-user' %}"
+    action="{% url 'Accounts:register-user' %}"
   >
     {% csrf_token %}
     <div class="form-group row">
@@ -96,7 +96,7 @@
       >
         Sign Up
       </button>
-      <a href="{% url 'home-page' %}"
+      <a href="{% url 'dashboard' %}"
       class="btn btn-pill btn-outline-white opacity-70 px-15 py-3 m-2"
       >
       Sign In
