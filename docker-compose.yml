@@ -14,7 +14,7 @@ services:
       DMS_DATABASE: railway
     restart: always
     ports:
-      - 58505:58505
+      - 22916:22916
 
   # Redis container
   redis:
@@ -37,7 +37,7 @@ services:
       - DMS_HOST=roundhouse.proxy.rlwy.net
       - DMS_PASSWORD=cpFyVjcQUPLEAWGBiuAdPahTBmogIfLK
       - DMS_DATABASE=railway
-      - DMS_PORT=58505
+      - DMS_PORT=22916
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
