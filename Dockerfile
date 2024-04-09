@@ -36,6 +36,8 @@ RUN python3 manage.py collectstatic --noinput
 # Expose the port on which Django runs
 EXPOSE 8000
 
-RUN echo "Python is installed..."
-# Command to run the Django development server
+# Run the Django server
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+
+# End of Dockerfile
+RUN echo "Completed running the Dockerfile..."

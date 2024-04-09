@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3'
 
 services:
   # Postgres database
@@ -32,7 +32,7 @@ services:
     image: django:latest
     environment:
       - SECRET_KEY="django-insecure-j^$jpl2!yr(2)l&)(cz(utnunbk+ruou_psi)qc338k0j48(*^"
-      - ENVIROMENT=development
+      - ENVIROMENT=production
       - DMS_USER=postgres
       - DMS_DATABASE=railway
       - DMS_HOST=roundhouse.proxy.rlwy.net
