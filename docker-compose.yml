@@ -1,0 +1,75 @@
+version: '3.7'
+
+services:
+  # Postgres database
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    container_name: dms_postgres_db
+    environment:
+      POSTGRES_HOST: roundhouse.proxy.rlwy.net
+      POSTGRES_DATABASE: railway
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: KDIkSTOgAXbWwotuUeGJtzFhrXlHtUVg
+    restart: always
+    ports:
+      - 58505:58505
+
+  # Redis container
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - 6379:6379
+    
+  # Django app
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: dms_app
+    image: django:latest
+    environment:
+      - SECRET_KEY="django-insecure-j^$jpl2!yr(2)l&)(cz(utnunbk+ruou_psi)qc338k0j48(*^"
+      - ENVIROMENT=development
+      - DMS_USER=postgres
+      - DMS_DATABASE=railway
+      - DMS_HOST=roundhouse.proxy.rlwy.net
+      - DMS_PASSWORD=KDIkSTOgAXbWwotuUeGJtzFhrXlHtUVg
+      - DMS_PORT=58505
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    links:
+      - db
+
+# Celery worker
+  worker:
+    restart: always
+    build: 
+      context: .
+    command: celery -A DocumentManagementSystem worker -l info
+    volumes:
+      - .:/code
+    container_name: celery
+    depends_on:
+      - db
+      - redis
+      - app
+
+  # Celery beat
+  beat:
+    build: 
+      context: .
+    command: celery -A DocumentManagementSystem beat -l info
+    volumes:
+      - .:/code
+    container_name: beat
+    depends_on:
+      - db
+      - redis
+      - app
