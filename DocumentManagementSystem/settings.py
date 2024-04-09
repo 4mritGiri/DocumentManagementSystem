@@ -20,7 +20,7 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', default='development')
 if ENVIRONMENT == 'production':
     print("Production Environment...")
     DEBUG = False
-    ALLOWED_HOSTS = ["dms.up.railway.app", ".vercel.app", ".now.sh"]
+    ALLOWED_HOSTS = ["0.0.0.0","dms.up.railway.app", ".vercel.app", ".now.sh"]
 # else:
 #     print("Development Environment...")
 #     DEBUG = True
