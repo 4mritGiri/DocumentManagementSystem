@@ -283,6 +283,8 @@ ASGI_APPLICATION = 'DocumentManagementSystem.asgi.application'
 #         'NAME': BASE_DIR / 'dbaa.sqlite3',
 #     }
 # }
+
+
 if(ENVIRONMENT == 'development'):
     DATABASES = {
         'default': {
