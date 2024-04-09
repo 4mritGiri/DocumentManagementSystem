@@ -19,18 +19,14 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 ENVIRONMENT = os.getenv('ENVIRONMENT', default='development')
 if ENVIRONMENT == 'production':
     print("Production Environment...")
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = ["0.0.0.0","dms.up.railway.app", ".vercel.app", ".now.sh"]
-# else:
-#     print("Development Environment...")
-#     DEBUG = True
-#     ALLOWED_HOSTS = ["127.0.0.1","localhost"]
+    CSRF_TRUSTED_ORIGINS = ["https://dms.up.railway.app"]
+else:
+    print("Development Environment...")
+    DEBUG = True
+    ALLOWED_HOSTS = ["127.0.0.1","0.0.0.0","localhost"]
 
-DEBUG = True
-
-ALLOWED_HOSTS = ["127.0.0.1","localhost", "dms.up.railway.app", ".vercel.app", ".now.sh"]
-
-CSRF_TRUSTED_ORIGINS = ["https://dms.up.railway.app"]
 
 # Application definition
 INSTALLED_APPS = [
