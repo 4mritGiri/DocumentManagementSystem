@@ -1,5 +1,8 @@
 FROM python:3.11
 
+# Print the Docker is running
+RUN echo "Docker is running..."
+
 # Install necessary libraries including libzbar and libgl1-mesa-glx
 RUN apt-get update && apt-get install -y \
     libzbar-dev \
@@ -21,5 +24,6 @@ COPY . .
 # Expose the port on which Django runs
 EXPOSE 8000
 
+RUN echo "Python is installed..."
 # Command to run the Django development server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
