@@ -49,7 +49,7 @@ local_settings.py
 # Ignore migrations
 !*/migrations/__init__.py
 # ignore migrations/0001_ files
-**/migrations/*.py
+# **/migrations/*.py
 **/migrations/*.pyc
 dmsApp/__pycache__/*
 dmsApp/__pycache__/*.*
