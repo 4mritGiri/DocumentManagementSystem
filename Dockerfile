@@ -36,9 +36,6 @@ RUN python3 manage.py collectstatic --noinput
 # Expose the port on which Django runs
 EXPOSE 8000
 
-# find the IP address of the host machine
-RUN ifconfig
-
 # Run the Django server
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 
