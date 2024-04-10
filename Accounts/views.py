@@ -109,4 +109,3 @@ def update_password(request):
         context['form'] = form
     return render(request,'Auth/update_password.html',context)
 
-

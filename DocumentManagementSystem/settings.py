@@ -20,7 +20,7 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', default='development')
 if ENVIRONMENT == 'production':
     print("Production Environment...")
     DEBUG = True
-    ALLOWED_HOSTS = ["0.0.0.0","dms.up.railway.app", ".vercel.app", ".now.sh"]
+    ALLOWED_HOSTS = ["*"]
     CSRF_TRUSTED_ORIGINS = ["https://dms.up.railway.app"]
 else:
     print("Development Environment...")
@@ -371,12 +371,11 @@ AUTH_USER_MODEL = 'Accounts.CustomUser'
     # * DJANGO-CHANELS STUFF (Settings) *
     # ***********************************
 # ======================= CHANNEL_LAYERS =============================== 
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
     },
 }
@@ -385,7 +384,7 @@ CHANNEL_LAYERS = {
     # * CELERY (Settings) *
     # *********************
 # ============================= CELERY STUFF =============================
-CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_BACKEND = 'django-db'
