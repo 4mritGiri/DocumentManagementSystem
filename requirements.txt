@@ -26,7 +26,7 @@ idna==3.6
 incremental==22.10.0
 kombu==5.3.6
 numpy==1.26.4
-# opencv-python==4.9.0.80
+opencv-python==4.9.0.80
 Pillow==10.1.0
 prompt-toolkit==3.0.43
 psycopg2-binary==2.9.9
