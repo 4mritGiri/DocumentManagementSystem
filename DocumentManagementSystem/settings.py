@@ -20,7 +20,7 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', default='development')
 if ENVIRONMENT == 'production':
     print("Production Environment...")
     DEBUG = True
-    ALLOWED_HOSTS = ["0.0.0.0","dms.up.railway.app", ".vercel.app", ".now.sh"]
+    ALLOWED_HOSTS = ["*"]
     CSRF_TRUSTED_ORIGINS = ["https://dms.up.railway.app"]
 else:
     print("Development Environment...")
