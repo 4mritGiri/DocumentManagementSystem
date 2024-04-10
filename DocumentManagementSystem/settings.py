@@ -301,7 +301,6 @@ if not ENVIRONMENT == 'development':
             "PORT": os.environ.get("DMS_PORT"),
         }
     }
-    print(DATABASES)
 
 
 # Password validation
