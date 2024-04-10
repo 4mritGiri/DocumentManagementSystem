@@ -47,7 +47,7 @@ local_settings.py
 *.swp
 
 # Ignore migrations
-!*/migrations/__init__.py
+!**/migrations/__init__.py
 # ignore migrations/0001_ files
 **/migrations/*.py
 **/migrations/*.pyc
@@ -60,3 +60,4 @@ Package/__pycache__/
 Package/__pycache__/
 
 req.txt
+Dkr
