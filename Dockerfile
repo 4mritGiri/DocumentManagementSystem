@@ -5,9 +5,27 @@ RUN echo "Docker is running..."
 
 # Install necessary libraries including libzbar and libgl1-mesa-glx
 RUN apk update && apk add --no-cache \
-    libzbar-dev \
     mesa-gl \
     && rm -rf /var/cache/apk/*
+
+# Manually install libzbar-dev
+RUN apk add --no-cache --virtual .build-deps \
+    gcc \
+    make \
+    musl-dev \
+    libffi-dev \
+    zlib-dev \
+    libx11-dev \
+    libxext-dev \
+    libxrender-dev \
+    libxcb-dev \
+    libxkb-dev \
+    libxslt-dev \
+    libxml2-dev \
+    && apk add --no-cache libzbar-dev \
+    && rm -rf /var/cache/apk/* \
+    && apk del .build-deps
+
 
 # Setting the environment variable
 ENV PYTHONUNBUFFERED 1
