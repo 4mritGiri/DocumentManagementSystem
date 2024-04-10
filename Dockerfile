@@ -1,13 +1,13 @@
-FROM python:3.11.6-slim-bullseye
+FROM python:3.11.6-alpine3.18
 
 # Print the Docker is running
 RUN echo "Docker is running..."
 
 # Install necessary libraries including libzbar and libgl1-mesa-glx
-RUN apt-get update && apt-get install -y \
+RUN apk update && apk add --no-cache \
     libzbar-dev \
-    libgl1-mesa-glx \
-    && rm -rf /var/lib/apt/lists/*
+    mesa-gl \
+    && rm -rf /var/cache/apk/*
 
 # Setting the environment variable
 ENV PYTHONUNBUFFERED 1
