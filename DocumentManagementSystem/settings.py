@@ -371,7 +371,6 @@ AUTH_USER_MODEL = 'Accounts.CustomUser'
     # * DJANGO-CHANELS STUFF (Settings) *
     # ***********************************
 # ======================= CHANNEL_LAYERS =============================== 
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
