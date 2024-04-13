@@ -3,18 +3,28 @@ version: '3'
 services:
   # Postgres database
   db:
-    image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    container_name: dms_postgres_db
-    environment:
-      DMS_HOST: roundhouse.proxy.rlwy.net
-      DMS_USER: postgres
-      DMS_PASSWORD: cpFyVjcQUPLEAWGBiuAdPahTBmogIfLK
-      DMS_DATABASE: railway
+    image: postgres:alpine3.18
+    container_name: postgres_db
+    env_file:
+      - .env.dev
     restart: always
     ports:
-      - 22916:22916
+      - 5432:5432
+
+  # Django app
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: dms_app
+    env_file:
+      - .env.dev
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
 
   # Redis container
   redis:
@@ -22,33 +32,9 @@ services:
     container_name: redis
     ports:
       - 6379:6379
-    
-  # Django app
-  app:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    container_name: dms_app
-    image: django:latest
-    environment:
-      - SECRET_KEY=django-insecure-j^$jpl2!yr(2)l&)(cz(utnunbk+ruou_psi)qc338k0j48(*^
-      - ENVIRONMENT=production
-      - DMS_USER=postgres
-      - DMS_HOST=roundhouse.proxy.rlwy.net
-      - DMS_PASSWORD=cpFyVjcQUPLEAWGBiuAdPahTBmogIfLK
-      - DMS_DATABASE=railway
-      - DMS_PORT=22916
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 8000:8000
-    depends_on:
-      - db
-    links:
-      - db
-
-# Celery worker
-  worker:
+  
+  # celery
+  celery:
     restart: always
     build: 
       context: .
@@ -56,6 +42,8 @@ services:
     volumes:
       - .:/code
     container_name: celery
+    env_file:
+      - ./.env.dev
     depends_on:
       - db
       - redis
@@ -69,6 +57,8 @@ services:
     volumes:
       - .:/code
     container_name: beat
+    env_file:
+      - ./.env.dev
     depends_on:
       - db
       - redis

@@ -22,8 +22,12 @@ if ENVIRONMENT == 'production':
     DEBUG = True
     ALLOWED_HOSTS = ["*"]
     CSRF_TRUSTED_ORIGINS = ["https://dms.up.railway.app"]
+elif ENVIRONMENT == 'docker':
+    print(ENVIRONMENT + "environment is running...")
+    DEBUG = True
+    ALLOWED_HOSTS = ["127.0.0.1","0.0.0.0","localhost"]
 else:
-    print("Development Environment...")
+    print(ENVIRONMENT + " Environment...")
     DEBUG = True
     ALLOWED_HOSTS = ["127.0.0.1","0.0.0.0","localhost"]
 
@@ -288,6 +292,20 @@ if(ENVIRONMENT == 'development'):
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    
+# PostgreSQL Database Configuration for Docker
+if ENVIRONMENT == 'docker':
+    print(ENVIRONMENT + "Environment is running...")
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": os.environ.get("DMS_DATABASE"),
+            "USER": os.environ.get("DMS_USER"),
+            "PASSWORD": os.environ.get("DMS_PASSWORD"),
+            "HOST": os.environ.get("DMS_HOST"),
+            "PORT": os.environ.get("DMS_PORT"),
+        }
+    }
 
 # PostgreSQL Database Configuration for Production in vercel
 if not ENVIRONMENT == 'development':
@@ -371,20 +389,35 @@ AUTH_USER_MODEL = 'Accounts.CustomUser'
     # * DJANGO-CHANELS STUFF (Settings) *
     # ***********************************
 # ======================= CHANNEL_LAYERS =============================== 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+if ENVIRONMENT == 'production':
+    print(os.environ.get('REDIS_URL'))
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            },
         },
-    },
-}
+    }
+else:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": "redis://localhost:6379",
+            },
+        },
+    }
 
     # *********************
     # * CELERY (Settings) *
     # *********************
 # ============================= CELERY STUFF =============================
-CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+if ENVIRONMENT == 'production':
+    CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+else:
+    CELERY_BROKER_URL = 'redis://localhost:6379'
+
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_BACKEND = 'django-db'
